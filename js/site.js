@@ -2,7 +2,7 @@
  * Paste your Google Drive "view" links here (Share → Anyone with the link → Viewer).
  * Portfolio example: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
  */
-const CV_GOOGLE_DRIVE_URL = 'https://drive.google.com/file/d/PASTE_YOUR_CV_FILE_ID/view?usp=sharing';
+const CV_GOOGLE_DRIVE_URL = 'https://drive.google.com/file/d/1_KZusXtZdGnyrI9ZBmx3jJaMRYweYC1k/view?usp=sharing';
 
 /* Shared navigation — used on all pages */
 document.addEventListener('DOMContentLoaded', function() {
