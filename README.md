@@ -1,7 +1,5 @@
 # Astone Mwamba — Portfolio
 
-Portfolio site styled after [suwilanjisiwale.com](https://suwilanjisiwale.com/).
-
 ## Pages
 
 | Page | File |
