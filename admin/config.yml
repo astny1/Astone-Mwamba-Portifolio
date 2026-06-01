@@ -12,9 +12,9 @@ local_backend: true
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-site_url: https://your-site-name.netlify.app
-display_url: https://your-site-name.netlify.app
-logo_url: https://i.ibb.co/xZCbTcg/profile.jpg
+site_url: astonemwambaportfolio.netlify.app
+display_url: astonemwambaportfolio.netlify.app
+logo_url: https://i.ibb.co/sv214swx/IMG-32.png
 
 collections:
   - name: blog
