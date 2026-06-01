@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept invite | Astone Mwamba Portfolio</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <meta name="theme-color" content="#031a30">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #031a30;
+            color: #dce5fb;
+            font-family: system-ui, sans-serif;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        p { max-width: 420px; line-height: 1.6; color: #96a2bc; }
+        a { color: #00ffff; }
+    </style>
+</head>
+<body>
+    <div>
+        <p id="invite-msg">Opening sign-up…</p>
+        <p>
+            <a href="admin/">Go to admin</a> after you set your password.<br>
+            <a href="#" id="forgot-link">Forgot password?</a> ·
+            <a href="#" id="login-link">Log in</a>
+        </p>
+    </div>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        (function () {
+            function getInviteToken() {
+                var hash = window.location.hash || '';
+                var match = hash.match(/invite_token=([^&]+)/);
+                if (match) return match[1];
+                var params = new URLSearchParams(window.location.search);
+                return params.get('invite_token');
+            }
+
+            var token = getInviteToken();
+            if (token) {
+                window.location.hash = 'invite_token=' + token;
+            }
+
+            function openSignup() {
+                if (!window.netlifyIdentity) return;
+                window.netlifyIdentity.on('init', function (user) {
+                    if (user) {
+                        window.location.href = '/admin/';
+                        return;
+                    }
+                    window.netlifyIdentity.open('signup');
+                });
+            }
+
+            if (!token) {
+                document.getElementById('invite-msg').textContent =
+                    'No invite token found. Open the link from your Netlify invite email, or log in at /admin/.';
+                return;
+            }
+
+            openSignup();
+
+            window.netlifyIdentity.on('login', function () {
+                window.location.href = '/admin/';
+            });
+
+            document.getElementById('forgot-link').addEventListener('click', function (e) {
+                e.preventDefault();
+                if (window.netlifyIdentity) window.netlifyIdentity.open('recover');
+            });
+            document.getElementById('login-link').addEventListener('click', function (e) {
+                e.preventDefault();
+                if (window.netlifyIdentity) window.netlifyIdentity.open('login');
+            });
+        })();
+    </script>
+</body>
+</html>
