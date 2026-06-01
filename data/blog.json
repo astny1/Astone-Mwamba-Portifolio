@@ -1,0 +1,20 @@
+{
+  "posts": [
+    {
+      "slug": "why-zambian-smes-need-security-audits",
+      "title": "Why Zambian SMEs Need Proactive Security Audits",
+      "date": "2026-05-01",
+      "tag": "Cybersecurity",
+      "excerpt": "Small businesses are increasingly targeted online. A structured security audit is the fastest way to protect reputation and customer trust.",
+      "body": "Many small and medium enterprises in Zambia rely on digital tools for sales, payments, and customer communication — but few have a formal security review process.\n\nA proactive audit helps identify weak passwords, outdated software, exposed network ports, and risky third-party integrations before attackers exploit them.\n\nIn this article I outline practical steps any business can take to start improving security without a large budget."
+    },
+    {
+      "slug": "secure-web-apps-on-a-budget",
+      "title": "Building Secure Web Applications on a Budget",
+      "date": "2026-04-12",
+      "tag": "Software Development",
+      "excerpt": "Practical OWASP-aligned habits for startups and freelancers who cannot afford a dedicated security team.",
+      "body": "Secure development does not always require expensive tools. It starts with input validation, HTTPS everywhere, and keeping dependencies updated.\n\nUse environment variables for secrets, never commit API keys to GitHub, and test forms for common injection patterns.\n\nThese foundations dramatically reduce risk for portfolios, business sites, and client projects."
+    }
+  ]
+}

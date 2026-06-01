@@ -1,0 +1,40 @@
+{
+  "achievements": [
+    {
+      "title": "15+ Vulnerabilities Remediated",
+      "year": "2021",
+      "category": "Cybersecurity",
+      "description": "Identified and patched security vulnerabilities during corporate branding and IT support work with Northwold Investment."
+    },
+    {
+      "title": "300% Social Media Growth",
+      "year": "2022",
+      "category": "Digital Marketing",
+      "description": "Delivered a digital marketing strategy for Bafana Construction that tripled follower growth within six months."
+    },
+    {
+      "title": "CAMINEX Design Contributor",
+      "year": "2024",
+      "category": "Graphic Design",
+      "description": "Produced social media graphics and marketing materials for the Copperbelt Agricultural Mining Industrial Networking Enterprise."
+    },
+    {
+      "title": "KDCCI Newsletter Designer",
+      "year": "2024",
+      "category": "Publication Design",
+      "description": "Designed weekly business newsletters and event branding for the Kitwe & District Chamber of Commerce & Industry."
+    },
+    {
+      "title": "Bachelor's in Cybersecurity (In Progress)",
+      "year": "2023 – 2026",
+      "category": "Education",
+      "description": "Pursuing a Bachelor's in Cybersecurity at Kapasa Makasa University with focus on network vulnerability analysis."
+    },
+    {
+      "title": "Ethical Hacking Certification",
+      "year": "2024",
+      "category": "Certification",
+      "description": "Completed Udemy ethical hacking training covering advanced penetration testing and network security."
+    }
+  ]
+}
