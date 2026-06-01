@@ -1,0 +1,19 @@
+[build]
+  publish = "."
+
+# SPA-style admin (optional)
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# Netlify Forms — contact form success redirect (optional)
+[[redirects]]
+  from = "/contact-success"
+  to = "/index.html?form_status=success#contact"
+  status = 302

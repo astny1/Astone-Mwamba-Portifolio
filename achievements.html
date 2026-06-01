@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements | Astone Mwamba</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#031a30">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header headerActive" id="header">
+        <div class="logo-div contentText">
+            <a href="index.html#home"><h1 class="logo">Astone<span>.</span></h1></a>
+        </div>
+        <div class="navBar" id="nav-Bar">
+            <ul class="navList contentText">
+                <li class="navItem"><a href="index.html#about" class="navLink"><span class="number">1.</span> About</a></li>
+                <li class="navItem"><a href="index.html#education" class="navLink"><span class="number">2.</span> Education</a></li>
+                <li class="navItem"><a href="index.html#skills" class="navLink"><span class="number">3.</span> Skills</a></li>
+                <li class="navItem"><a href="index.html#projects" class="navLink"><span class="number">4.</span> Projects</a></li>
+                <li class="navItem"><a href="index.html#software-projects" class="navLink"><span class="number">5.</span> Software</a></li>
+                <li class="navItem"><a href="blog.html" class="navLink"><span class="number">6.</span> Blog</a></li>
+                <li class="navItem"><a href="achievements.html" class="navLink"><span class="number">7.</span> Achievements</a></li>
+                <li class="navItem"><a href="index.html#contact" class="navLink"><span class="number">8.</span> Contact</a></li>
+                <div class="closeIcon" id="closeIconID"><i class="bx bxs-x-circle icon closeIc"></i></div>
+            </ul>
+            <div class="resumeDiv">
+                <a href="#" class="resumeBtn js-cv-link">CV</a>
+            </div>
+        </div>
+        <div class="navToggle" id="toggleId"><i class="uil uil-align-center toggleIcon"></i></div>
+    </header>
+
+    <div class="col leftCol">
+        <div class="divIcons">
+            <div><a href="https://www.linkedin.com/in/astone-mwamba-59a867326" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><i class="uil uil-linkedin-alt leftColIcon"></i></a></div>
+            <div><a href="https://github.com" target="_blank" rel="noopener noreferrer"><i class="uil uil-github-alt leftColIcon"></i></a></div>
+            <div><a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"><i class="uil uil-facebook-alt leftColIcon"></i></a></div>
+        </div>
+        <div class="divLine"></div>
+    </div>
+    <div class="col rightCol">
+        <div class="emailDiv">astnymwamba@gmail.com</div>
+        <div class="rightdivLine"></div>
+    </div>
+
+    <div class="bodyContainer">
+        <section class="section page-section">
+            <div class="container">
+                <div class="sectionTitle">
+                    <span class="titleNumber">06 .</span>
+                    <h5 class="titleText">Achievements <div class="underline"><span></span></div></h5>
+                </div>
+                <p class="page-intro">Milestones across cybersecurity, marketing, design, and education.</p>
+                <div id="achievements-list" class="content-list"></div>
+                <p class="admin-hint"><i class="uil uil-info-circle"></i> <a href="admin/">Manage achievements in /admin</a> (after Netlify setup) · or edit <a href="CONTENT_GUIDE.md">CONTENT_GUIDE.md</a></p>
+            </div>
+        </section>
+        <footer class="footer"><span>&copy; <span class="js-current-year"></span> Astone Mwamba Portfolio. All Rights Reserved</span></footer>
+    </div>
+
+    <script src="js/site.js"></script>
+    <script src="js/content.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => loadAchievements('achievements-list'));</script>
+</body>
+</html>
