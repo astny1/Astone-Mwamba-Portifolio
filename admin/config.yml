@@ -1,0 +1,131 @@
+# Decap CMS (Netlify CMS) — edit at yoursite.com/admin/
+# Requires: Netlify hosting + GitHub repo + Netlify Identity (see NETLIFY_CMS_SETUP.md)
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Use `npx decap-server` locally while running: npx serve . -l 8080
+local_backend: true
+
+# Uploaded images save to images/uploads/ (keep each file under ~500 KB when possible)
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+site_url: https://your-site-name.netlify.app
+display_url: https://your-site-name.netlify.app
+logo_url: https://i.ibb.co/xZCbTcg/profile.jpg
+
+collections:
+  - name: blog
+    label: Blog Posts
+    label_singular: Blog Post
+    description: Articles shown on the Blog page
+    files:
+      - name: blog_data
+        label: All Blog Posts
+        file: data/blog.json
+        format: json
+        fields:
+          - label: Posts
+            name: posts
+            widget: list
+            summary: "{{fields.title}} — {{fields.date}}"
+            allow_add: true
+            allow_delete: true
+            allow_reorder: true
+            collapsed: true
+            fields:
+              - label: URL Slug
+                name: slug
+                widget: string
+                hint: "Lowercase with hyphens only, e.g. my-article-title"
+                pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', "Use lowercase letters, numbers, and hyphens only"]
+              - label: Title
+                name: title
+                widget: string
+              - label: Publish Date
+                name: date
+                widget: datetime
+                format: "YYYY-MM-DD"
+                date_format: "YYYY-MM-DD"
+                time_format: false
+              - label: Category Tag
+                name: tag
+                widget: select
+                options:
+                  - Cybersecurity
+                  - Software Development
+                  - Digital Marketing
+                  - Multimedia
+                  - Career
+                  - Other
+                default: Cybersecurity
+              - label: Short Excerpt
+                name: excerpt
+                widget: text
+                hint: "Shown on the blog list page (1–2 sentences)"
+              - label: Cover Photo
+                name: featured_image
+                widget: image
+                required: false
+                hint: "Main image for this post (JPG/PNG/WebP, ideally under 500 KB). Shown at top of article and on blog list."
+              - label: Additional Photos
+                name: gallery
+                widget: list
+                required: false
+                hint: "Optional extra images displayed in a gallery below the article"
+                field:
+                  label: Photo
+                  name: image
+                  widget: image
+              - label: Article Body
+                name: body
+                widget: markdown
+                hint: "Write your article here. Click the image icon in the toolbar to insert more photos inline (keep each file in KB, not MB)."
+
+  - name: achievements
+    label: Achievements
+    label_singular: Achievement
+    description: Milestones shown on the Achievements page
+    files:
+      - name: achievements_data
+        label: All Achievements
+        file: data/achievements.json
+        format: json
+        fields:
+          - label: Achievements
+            name: achievements
+            widget: list
+            summary: "{{fields.title}} ({{fields.year}})"
+            allow_add: true
+            allow_delete: true
+            allow_reorder: true
+            collapsed: true
+            fields:
+              - label: Title
+                name: title
+                widget: string
+              - label: Year
+                name: year
+                widget: string
+                hint: "e.g. 2024 or 2023 – 2026"
+              - label: Category
+                name: category
+                widget: select
+                options:
+                  - Cybersecurity
+                  - Digital Marketing
+                  - Graphic Design
+                  - Education
+                  - Certification
+                  - Multimedia
+                  - Other
+              - label: Photo
+                name: image
+                widget: image
+                required: false
+                hint: "Optional image for this achievement (JPG/PNG/WebP, under 500 KB recommended)"
+              - label: Description
+                name: description
+                widget: text
