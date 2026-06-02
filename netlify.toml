@@ -1,0 +1,50 @@
+[build]
+  publish = "."
+
+# SPA-style admin (optional)
+[[redirects]]
+  from = "/admin"
+  to = "/admin/"
+  status = 301
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# Netlify Forms — contact form success redirect (optional)
+[[redirects]]
+  from = "/contact-success"
+  to = "/index.html?form_status=success#contact"
+  status = 302
+
+# Clean URLs for content pages
+[[redirects]]
+  from = "/achievements"
+  to = "/achievements.html"
+  status = 200
+
+[[redirects]]
+  from = "/achievements/"
+  to = "/achievements.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog"
+  to = "/blog.html"
+  status = 200
+
+[[redirects]]
+  from = "/blog/"
+  to = "/blog.html"
+  status = 200
+
+[[redirects]]
+  from = "/achievement-post"
+  to = "/achievement-post.html"
+  status = 200
+
+[[redirects]]
+  from = "/achievement"
+  to = "/achievement-post.html"
+  status = 301
