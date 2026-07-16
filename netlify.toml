@@ -1,5 +1,19 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
+
+# Decap CMS GitHub OAuth (must stay above catch-all style rules)
+[[redirects]]
+  from = "/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/callback"
+  to = "/.netlify/functions/callback"
+  status = 200
+  force = true
 
 # Trailing slash for /admin (Decap uses hash routing — do NOT rewrite /admin/* or config.yml breaks)
 [[redirects]]

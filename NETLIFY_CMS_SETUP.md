@@ -1,156 +1,50 @@
-# Netlify CMS Setup Guide
+# Content Manager (Decap CMS) Setup
 
-Use the visual editor at **`yoursite.com/admin/`** to add blog posts and achievements — no JSON editing required.
+Use the visual editor at **`https://astonemwambaportfolio.netlify.app/admin/`** to add blog posts and achievements.
 
----
-
-## What you need
-
-1. A **GitHub** account (free)
-2. A **Netlify** account (free) — [netlify.com](https://www.netlify.com)
-3. Your portfolio folder pushed to a GitHub repository
+Netlify’s old shared login (`api.netlify.com/auth`) and Git Gateway are broken/deprecated. This site uses **GitHub login through Netlify Functions** instead.
 
 ---
 
-## Step 1 — Put your site on GitHub
+## One-time setup (required)
 
-1. Create a new repository on GitHub (e.g. `astone-portfolio`).
-2. Upload your entire `Portifolio` folder, or use Git:
+### 1. Create a GitHub OAuth App
 
-```bash
-cd Portifolio
-git init
-git add .
-git commit -m "Initial portfolio"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/astone-portfolio.git
-git push -u origin main
-```
+1. Open [GitHub Developer Settings → OAuth Apps](https://github.com/settings/developers) → **New OAuth App**.
+2. Fill in:
+   - **Application name:** `Astone Portfolio CMS` (any name)
+   - **Homepage URL:** `https://astonemwambaportfolio.netlify.app`
+   - **Authorization callback URL:** `https://astonemwambaportfolio.netlify.app/callback`
+3. Click **Register application**.
+4. Copy the **Client ID**.
+5. Click **Generate a new client secret** and copy the **Client Secret** (shown once).
 
----
+### 2. Add secrets in Netlify
 
-## Step 2 — Deploy on Netlify
+1. Open [Netlify](https://app.netlify.com) → your site → **Project configuration** → **Environment variables**.
+2. Add:
+   - `GITHUB_CLIENT_ID` = your Client ID
+   - `GITHUB_CLIENT_SECRET` = your Client Secret
+3. Trigger a new deploy (**Deploys** → **Trigger deploy** → **Deploy site**) so the functions pick up the variables.
 
-1. Log in to [Netlify](https://app.netlify.com).
-2. Click **Add new site** → **Import an existing project**.
-3. Choose **GitHub** and select your repository.
-4. Build settings:
-   - **Build command:** leave empty
-   - **Publish directory:** `.` (root)
-5. Click **Deploy site**.
-6. Wait until the deploy finishes. Note your URL (e.g. `https://astone-portfolio.netlify.app`).
+### 3. Log in
 
----
+1. Open **https://astonemwambaportfolio.netlify.app/admin/**
+2. Hard refresh (`Ctrl+Shift+R`)
+3. Click **Login with GitHub** (allow the popup)
+4. Approve access for your account (`astny1`)
 
-## Step 3 — Update CMS config with your real URL
-
-1. Open `admin/config.yml` in your project.
-2. Replace `https://your-site-name.netlify.app` with your actual Netlify URL in:
-   - `site_url`
-   - `display_url`
-3. Commit and push to GitHub (Netlify will redeploy automatically).
-
-```yaml
-site_url: https://astone-portfolio.netlify.app
-display_url: https://astone-portfolio.netlify.app
-```
+You must use the GitHub account that can push to `astny1/Astone-Mwamba-Portifolio`.
 
 ---
 
-## Step 4 — Point the CMS at your GitHub repo
+## After login
 
-In `admin/config.yml`, the backend should look like this (already set for this project):
+- **Blog Posts** — add/edit/delete articles  
+- **Achievements** — add/edit/delete milestones  
+- **Publish** saves to GitHub; Netlify rebuilds in about 1–2 minutes  
 
-```yaml
-backend:
-  name: github
-  repo: YOUR_USERNAME/YOUR_REPO
-  branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: auth
-  site_domain: your-site-name.netlify.app
-```
-
-Your GitHub account must have **write access** to that repository (you own it, so you’re fine).
-
----
-
-## Step 5 — Log in and edit content
-
-1. Visit **`https://YOUR-SITE.netlify.app/admin/`**
-2. Click **Login with GitHub** and approve access (allow pop-ups for the site).
-3. You will see:
-   - **Blog Posts** — add, edit, delete articles
-   - **Achievements** — add, edit, delete milestones
-4. After you click **Publish**, changes are saved to GitHub and Netlify rebuilds your site (usually 1–2 minutes).
-
----
-
-## How to upload photos
-
-Images are saved to **`images/uploads/`** on your site when you publish.
-
-### Blog posts — 3 ways to add photos
-
-1. **Cover Photo** — main image at the top of the article and on the blog list.
-2. **Additional Photos** — gallery shown below the article (click **Add** for each photo).
-3. **Inside the article** — in **Article Body**, click the **image icon** in the toolbar to insert a photo inline.
-
-### Achievements
-
-Use the **Photo** field when editing an achievement.
-
-### Tips for small file sizes (KB not MB)
-
-- Resize photos before upload (e.g. 1200px wide is enough for web).
-- Use **JPG** for photos, **PNG** for graphics with text.
-- Aim for **under 500 KB** per image so the site loads fast on mobile data in Zambia.
-- Free tools: [Squoosh](https://squoosh.app), TinyPNG, or phone “resize image” apps.
-
----
-
-## How to write a blog post in /admin
-
-| Field | What to enter |
-|--------|----------------|
-| URL Slug | `my-post-title` (lowercase, hyphens only) |
-| Title | Headline |
-| Publish Date | Date shown on the site |
-| Category Tag | Cybersecurity, Marketing, etc. |
-| Short Excerpt | Preview text on the blog list |
-| Cover Photo | *(optional)* Main image — upload from your computer |
-| Additional Photos | *(optional)* Extra gallery images |
-| Article Body | Full post (Markdown + inline images via toolbar) |
-
-Click **Publish** when done.
-
----
-
-## How to add an achievement
-
-| Field | What to enter |
-|--------|----------------|
-| Title | Achievement name |
-| Year | `2024` or `2023 – 2026` |
-| Category | Type of achievement |
-| Description | What you accomplished |
-
----
-
-## Test locally before deploying (optional)
-
-**Terminal 1** — run the site:
-```bash
-cd Portifolio
-python -m http.server 8080
-```
-
-**Terminal 2** — run the CMS backend:
-```bash
-npx decap-server
-```
-
-Open http://localhost:8080/admin/ — you can test the editor locally (changes won’t go to GitHub until deployed with Identity enabled).
+Images go to `images/uploads/` (keep each file under ~500 KB when possible).
 
 ---
 
@@ -158,19 +52,18 @@ Open http://localhost:8080/admin/ — you can test the editor locally (changes w
 
 | Problem | Fix |
 |---------|-----|
-| `503` / “Problem fetching repo data from Git Gateway” | This project uses **GitHub login** now — hard refresh `/admin/` after deploy; click **Login with GitHub** |
-| Login popup blocked | Allow pop-ups for your Netlify site, then try again |
-| Red error toast shows `%{details}` | Use `/admin/` only; `site_url` must include `https://` in `admin/config.yml` |
-| URL looks like `/admin/yoursite.netlify.app` | Open `https://yoursite.netlify.app/admin/` (full URL with `https://`) |
-| Changes don’t appear on site | Wait for Netlify deploy to finish (check **Deploys** tab) |
-| `branch: main` error | If your GitHub branch is `master`, change `branch: main` to `branch: master` in `admin/config.yml` |
-| Blog page empty locally | Use `python -m http.server` — don’t open HTML files directly |
-| 404 on /admin | Ensure `admin/index.html` and `admin/config.yml` are in your repo |
+| `api.netlify.com/auth` → Not Found | Expected — use this repo’s `/auth` flow and set the env vars above |
+| Missing `GITHUB_CLIENT_ID` | Add both env vars in Netlify, then redeploy |
+| Login popup blocked | Allow pop-ups for the Netlify site |
+| Wrong callback error from GitHub | Callback URL must be exactly `https://astonemwambaportfolio.netlify.app/callback` |
+| Changes don’t show on the site | Wait for the Netlify deploy to finish |
 
 ---
 
-## Still edit JSON manually?
+## Local preview (content only)
 
-You can still edit `data/blog.json` and `data/achievements.json` directly. The CMS and JSON use the same files — don’t edit both at the same time while publishing from /admin.
+```bash
+python -m http.server 8080
+```
 
-See also: [CONTENT_GUIDE.md](CONTENT_GUIDE.md)
+Open http://localhost:8080 — GitHub login for `/admin` only works on the deployed Netlify site (functions + OAuth secrets).

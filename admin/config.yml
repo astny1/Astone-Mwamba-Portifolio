@@ -1,14 +1,13 @@
-# Decap CMS (Netlify CMS) — edit at yoursite.com/admin/
-# Requires: Netlify hosting + GitHub repo + Netlify Identity (see NETLIFY_CMS_SETUP.md)
+# Decap CMS — edit at yoursite.com/admin/
+# Requires: Netlify + GitHub OAuth App env vars (see NETLIFY_CMS_SETUP.md)
 
-# Login with GitHub (avoids broken Netlify Git Gateway 503s)
+# Login with GitHub via this site's OAuth functions (/auth + /callback)
 backend:
   name: github
   repo: astny1/Astone-Mwamba-Portifolio
   branch: main
-  base_url: https://api.netlify.com
+  base_url: https://astonemwambaportfolio.netlify.app
   auth_endpoint: auth
-  site_domain: astonemwambaportfolio.netlify.app
 
 # For local CMS testing only: run `npx decap-server` and use backend: git-gateway + local_backend: true
 
