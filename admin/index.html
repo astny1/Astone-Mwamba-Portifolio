@@ -11,7 +11,6 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#031a30">
     <script>
-        // Repair old broken bookmarks: /admin/yourdomain.netlify.app
         (function () {
             var path = window.location.pathname.replace(/\/+$/, '') || '/';
             if (path !== '/admin' && path.indexOf('/admin/') === 0) {
@@ -21,7 +20,14 @@
     </script>
 </head>
 <body>
-    <!-- GitHub backend — no Netlify Identity / Git Gateway required -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.init({
+                APIUrl: 'https://astonemwambaportfolio.netlify.app/.netlify/identity'
+            });
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.6.4/dist/decap-cms.js"></script>
 </body>
 </html>

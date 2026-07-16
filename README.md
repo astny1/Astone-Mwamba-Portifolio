@@ -13,8 +13,8 @@
 
 ### Option A — Visual editor (recommended)
 
-1. Deploy to Netlify + GitHub, then finish the one-time OAuth steps in **NETLIFY_CMS_SETUP.md**
-2. Open **`yoursite.com/admin/`** and **Login with GitHub**
+1. Deploy to Netlify + GitHub and finish Identity / Git Gateway steps in **NETLIFY_CMS_SETUP.md**
+2. Open **`yoursite.com/admin/`** and log in with Netlify Identity
 3. Edit Blog or Achievements → **Publish**
 
 Setup guide: **[NETLIFY_CMS_SETUP.md](NETLIFY_CMS_SETUP.md)**

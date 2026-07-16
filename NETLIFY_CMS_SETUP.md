@@ -1,50 +1,41 @@
 # Content Manager (Decap CMS) Setup
 
-Use the visual editor at **`https://astonemwambaportfolio.netlify.app/admin/`** to add blog posts and achievements.
-
-Netlify’s old shared login (`api.netlify.com/auth`) and Git Gateway are broken/deprecated. This site uses **GitHub login through Netlify Functions** instead.
+Editor URL: **https://astonemwambaportfolio.netlify.app/admin/**
 
 ---
 
-## One-time setup (required)
+## Fix login (Git Gateway 503 / repo errors)
 
-### 1. Create a GitHub OAuth App
+Your CMS uses **Netlify Identity + Git Gateway**. If login fails or DevTools shows `503` / “Problem fetching repo data from Git Gateway”, reconnect Git Gateway:
 
-1. Open [GitHub Developer Settings → OAuth Apps](https://github.com/settings/developers) → **New OAuth App**.
-2. Fill in:
-   - **Application name:** `Astone Portfolio CMS` (any name)
-   - **Homepage URL:** `https://astonemwambaportfolio.netlify.app`
-   - **Authorization callback URL:** `https://astonemwambaportfolio.netlify.app/callback`
-3. Click **Register application**.
-4. Copy the **Client ID**.
-5. Click **Generate a new client secret** and copy the **Client Secret** (shown once).
+1. Open [Netlify](https://app.netlify.com) → your site  
+2. **Project configuration** → **Identity** → **Services** → **Git Gateway**  
+3. Click **Edit settings** (or Disable, then **Enable Git Gateway** again)  
+4. Generate / confirm a new access token so Netlify can reach GitHub  
+5. Also confirm the site is linked to repo `astny1/Astone-Mwamba-Portifolio`:  
+   **Project configuration** → **Build & deploy** → **Continuous deployment** → repository is linked  
 
-### 2. Add secrets in Netlify
+Then:
 
-1. Open [Netlify](https://app.netlify.com) → your site → **Project configuration** → **Environment variables**.
-2. Add:
-   - `GITHUB_CLIENT_ID` = your Client ID
-   - `GITHUB_CLIENT_SECRET` = your Client Secret
-3. Trigger a new deploy (**Deploys** → **Trigger deploy** → **Deploy site**) so the functions pick up the variables.
+1. Open **https://astonemwambaportfolio.netlify.app/admin/**  
+2. Hard refresh (`Ctrl+Shift+R`)  
+3. Click **Login with Netlify Identity**  
+4. Use the email/password from your Netlify Identity invite  
 
-### 3. Log in
+If you never accepted an invite: **Identity** → **Invite users** → invite yourself → accept the email.
 
-1. Open **https://astonemwambaportfolio.netlify.app/admin/**
-2. Hard refresh (`Ctrl+Shift+R`)
-3. Click **Login with GitHub** (allow the popup)
-4. Approve access for your account (`astny1`)
+---
 
-You must use the GitHub account that can push to `astny1/Astone-Mwamba-Portifolio`.
+## Optional: GitHub OAuth (not required)
+
+This repo also has `/auth` + `/callback` functions and env vars `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` for a direct GitHub login backend. That path can fail in **Microsoft Edge** when Tracking Prevention blocks `api.github.com`. Prefer Identity + Git Gateway above.
 
 ---
 
 ## After login
 
-- **Blog Posts** — add/edit/delete articles  
-- **Achievements** — add/edit/delete milestones  
-- **Publish** saves to GitHub; Netlify rebuilds in about 1–2 minutes  
-
-Images go to `images/uploads/` (keep each file under ~500 KB when possible).
+- **Blog Posts** / **Achievements** → edit → **Publish**  
+- Netlify rebuilds in about 1–2 minutes  
 
 ---
 
@@ -52,18 +43,7 @@ Images go to `images/uploads/` (keep each file under ~500 KB when possible).
 
 | Problem | Fix |
 |---------|-----|
-| `api.netlify.com/auth` → Not Found | Expected — use this repo’s `/auth` flow and set the env vars above |
-| Missing `GITHUB_CLIENT_ID` | Add both env vars in Netlify, then redeploy |
-| Login popup blocked | Allow pop-ups for the Netlify site |
-| Wrong callback error from GitHub | Callback URL must be exactly `https://astonemwambaportfolio.netlify.app/callback` |
-| Changes don’t show on the site | Wait for the Netlify deploy to finish |
-
----
-
-## Local preview (content only)
-
-```bash
-python -m http.server 8080
-```
-
-Open http://localhost:8080 — GitHub login for `/admin` only works on the deployed Netlify site (functions + OAuth secrets).
+| `503` on `/.netlify/git/github/...` | Re-enable Git Gateway / regenerate token (steps above) |
+| `%{details}` toast | Use `/admin/` only; accept Identity invite |
+| Edge blocks GitHub API | Use Identity login (default), or try Chrome |
+| Changes don’t show | Wait for Netlify deploy to finish |
