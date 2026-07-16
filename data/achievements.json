@@ -1,18 +1,11 @@
 {
   "achievements": [
     {
-      "title": "Zambia Tourism Excellence Awards Nominee",
-      "year": "2025",
-      "category": "Digital Marketing",
-      "description": "Nominated among the Top 10 finalists for the Digital Media Promoter of the Year Award at the Zambia Tourism Excellence Awards, organized under the auspices of the Ministry of Tourism, in recognition of outstanding contributions to tourism promotion through digital media.",
-      "image": "/images/uploads/img_4481.jpeg"
-    },
-    {
-      "title": "Cybersecurity Intern – Northwold Investments Limited ",
-      "category": "Cybersecurity",
-      "year": "2025-Present",
-      "description": "Currently undertaking a professional cybersecurity internship at Northwold Investments Limited, a leading ISO-certified distributor and authorized METTLER TOLEDO partner operating in Zambia, Malawi, and the Democratic Republic of Congo. Gaining hands-on experience in cybersecurity, information security, risk management, and the protection of organizational IT systems while applying cybersecurity principles in a real-world business environment.",
-      "image": "/images/uploads/701370715_1370964495083211_661437223609588822_n-1-.jpg"
+      "category": "Certification",
+      "image": "/images/uploads/upscalemedia-transformed-2-.jpeg",
+      "year": "2026",
+      "title": "Google Cybersecurity Professional Certificate",
+      "description": "Completed an intensive, hands-on program focused on foundational security operations, risk management, and threat mitigation. Developed practical skills in vulnerability assessment, incident response, and network security using industry-standard tools including Python, SQL, Linux, and SIEM systems."
     }
   ]
 }
