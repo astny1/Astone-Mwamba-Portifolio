@@ -22,6 +22,17 @@
                     window.location.replace('/invite.html#invite_token=' + match[1]);
                 }
             }
+
+            // Keep Identity on the real site origin (avoids broken relative site_url paths)
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.on('init', function (user) {
+                    if (!user) {
+                        window.netlifyIdentity.on('login', function () {
+                            document.location.href = '/admin/';
+                        });
+                    }
+                });
+            }
         })();
     </script>
     <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>

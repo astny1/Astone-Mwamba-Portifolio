@@ -159,6 +159,8 @@ Open http://localhost:8080/admin/ — you can test the editor locally (changes w
 | Problem | Fix |
 |---------|-----|
 | `/admin` shows login but login fails | Enable Identity + Git Gateway; accept invite email |
+| Red error toast shows `%{details}` | Usually Identity/Git Gateway not enabled, or `site_url` missing `https://` in `admin/config.yml` |
+| URL looks like `/admin/yoursite.netlify.app` | Set `site_url` / `display_url` to full URLs with `https://` (not bare domain) |
 | Changes don’t appear on site | Wait for Netlify deploy to finish (check **Deploys** tab) |
 | `branch: main` error | If your GitHub branch is `master`, change `branch: main` to `branch: master` in `admin/config.yml` |
 | Blog page empty locally | Use `python -m http.server` — don’t open HTML files directly |
