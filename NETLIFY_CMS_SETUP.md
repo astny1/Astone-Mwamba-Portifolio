@@ -57,28 +57,28 @@ display_url: https://astone-portfolio.netlify.app
 
 ---
 
-## Step 4 — Enable Netlify Identity
+## Step 4 — Point the CMS at your GitHub repo
 
-1. In Netlify, open your site → **Site configuration** → **Identity**.
-2. Click **Enable Identity**.
-3. Under **Registration preferences**, choose **Invite only** (recommended — only you can get an account).
-4. Scroll to **Services** → **Git Gateway** → click **Enable Git Gateway**.
+In `admin/config.yml`, the backend should look like this (already set for this project):
+
+```yaml
+backend:
+  name: github
+  repo: YOUR_USERNAME/YOUR_REPO
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+  site_domain: your-site-name.netlify.app
+```
+
+Your GitHub account must have **write access** to that repository (you own it, so you’re fine).
 
 ---
 
-## Step 5 — Invite yourself as admin
-
-1. Go to **Identity** → **Invite users**.
-2. Enter your email address and send the invite.
-3. Open the email and **accept the invite** — set a password.
-4. You are now the only person who can log in to `/admin`.
-
----
-
-## Step 6 — Log in and edit content
+## Step 5 — Log in and edit content
 
 1. Visit **`https://YOUR-SITE.netlify.app/admin/`**
-2. Click **Login with Netlify Identity** and sign in.
+2. Click **Login with GitHub** and approve access (allow pop-ups for the site).
 3. You will see:
    - **Blog Posts** — add, edit, delete articles
    - **Achievements** — add, edit, delete milestones
@@ -158,9 +158,10 @@ Open http://localhost:8080/admin/ — you can test the editor locally (changes w
 
 | Problem | Fix |
 |---------|-----|
-| `/admin` shows login but login fails | Enable Identity + Git Gateway; accept invite email |
-| Red error toast shows `%{details}` | Usually Identity/Git Gateway not enabled, or `site_url` missing `https://` in `admin/config.yml` |
-| URL looks like `/admin/yoursite.netlify.app` | Set `site_url` / `display_url` to full URLs with `https://` (not bare domain) |
+| `503` / “Problem fetching repo data from Git Gateway” | This project uses **GitHub login** now — hard refresh `/admin/` after deploy; click **Login with GitHub** |
+| Login popup blocked | Allow pop-ups for your Netlify site, then try again |
+| Red error toast shows `%{details}` | Use `/admin/` only; `site_url` must include `https://` in `admin/config.yml` |
+| URL looks like `/admin/yoursite.netlify.app` | Open `https://yoursite.netlify.app/admin/` (full URL with `https://`) |
 | Changes don’t appear on site | Wait for Netlify deploy to finish (check **Deploys** tab) |
 | `branch: main` error | If your GitHub branch is `master`, change `branch: main` to `branch: master` in `admin/config.yml` |
 | Blog page empty locally | Use `python -m http.server` — don’t open HTML files directly |

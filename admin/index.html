@@ -11,8 +11,7 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#031a30">
     <script>
-        // Old site_url without https:// created /admin/yourdomain.netlify.app
-        // From that path, config.yml fails to load and Identity shows %{details}
+        // Repair old broken bookmarks: /admin/yourdomain.netlify.app
         (function () {
             var path = window.location.pathname.replace(/\/+$/, '') || '/';
             if (path !== '/admin' && path.indexOf('/admin/') === 0) {
@@ -22,25 +21,7 @@
     </script>
 </head>
 <body>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-        (function () {
-            var hash = window.location.hash || '';
-            if (/invite_token=/.test(hash)) {
-                var match = hash.match(/invite_token=([^&]+)/);
-                if (match) {
-                    window.location.replace('/invite.html#invite_token=' + match[1]);
-                    return;
-                }
-            }
-
-            if (window.netlifyIdentity) {
-                window.netlifyIdentity.init({
-                    APIUrl: 'https://astonemwambaportfolio.netlify.app/.netlify/identity'
-                });
-            }
-        })();
-    </script>
-    <script src="https://unpkg.com/decap-cms@3.6.4/dist/decap-cms.js"></script>
+    <!-- GitHub backend — no Netlify Identity / Git Gateway required -->
+    <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.6.4/dist/decap-cms.js"></script>
 </body>
 </html>
