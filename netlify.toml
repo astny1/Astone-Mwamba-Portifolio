@@ -7,6 +7,19 @@
   to = "/admin/"
   status = 301
 
+# Repair bookmarked bad CMS URLs created when site_url lacked https://
+[[redirects]]
+  from = "/admin/astonemwambaportfolio.netlify.app"
+  to = "/admin/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/astonemwambaportfolio.netlify.app/*"
+  to = "/admin/"
+  status = 301
+  force = true
+
 # Netlify Forms — contact form success redirect (optional)
 [[redirects]]
   from = "/contact-success"

@@ -10,6 +10,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#031a30">
+    <script>
+        // Old site_url without https:// created /admin/yourdomain.netlify.app
+        // From that path, config.yml fails to load and Identity shows %{details}
+        (function () {
+            var path = window.location.pathname.replace(/\/+$/, '') || '/';
+            if (path !== '/admin' && path.indexOf('/admin/') === 0) {
+                window.location.replace('/admin/' + (window.location.hash || '#/'));
+            }
+        })();
+    </script>
 </head>
 <body>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -20,21 +30,17 @@
                 var match = hash.match(/invite_token=([^&]+)/);
                 if (match) {
                     window.location.replace('/invite.html#invite_token=' + match[1]);
+                    return;
                 }
             }
 
-            // Keep Identity on the real site origin (avoids broken relative site_url paths)
             if (window.netlifyIdentity) {
-                window.netlifyIdentity.on('init', function (user) {
-                    if (!user) {
-                        window.netlifyIdentity.on('login', function () {
-                            document.location.href = '/admin/';
-                        });
-                    }
+                window.netlifyIdentity.init({
+                    APIUrl: 'https://astonemwambaportfolio.netlify.app/.netlify/identity'
                 });
             }
         })();
     </script>
-    <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.6.4/dist/decap-cms.js"></script>
 </body>
 </html>

@@ -4,9 +4,13 @@
 backend:
   name: git-gateway
   branch: main
+  # Force Identity API on the real site origin (avoids broken /admin/<domain> URLs)
+  identity_url: https://astonemwambaportfolio.netlify.app/.netlify/identity
+  gateway_url: https://astonemwambaportfolio.netlify.app/.netlify/git
+  site_domain: astonemwambaportfolio.netlify.app
 
-# Use `npx decap-server` locally while running: npx serve . -l 8080
-local_backend: true
+# For local CMS testing only: run `npx decap-server` and uncomment the next line
+# local_backend: true
 
 # Uploaded images save to images/uploads/ (keep each file under ~500 KB when possible)
 media_folder: "images/uploads"
