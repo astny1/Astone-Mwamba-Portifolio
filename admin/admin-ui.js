@@ -5,13 +5,40 @@
 (function () {
   function isDashboardRoute() {
     var hash = window.location.hash || '#/';
-    // Decap home / collections overview
     return hash === '#/' || hash === '#' || /^#\/?\s*$/.test(hash);
+  }
+
+  function isLoginScreen() {
+    return !!document.querySelector('[class*="AuthenticationPage"]');
+  }
+
+  function ensureLoginFooter() {
+    var existing = document.querySelector('.am-login-footer');
+    if (!isLoginScreen()) {
+      document.body.classList.add('am-logged-in');
+      if (existing) existing.remove();
+      return;
+    }
+
+    document.body.classList.remove('am-logged-in');
+    if (existing) return;
+
+    var footer = document.createElement('footer');
+    footer.className = 'am-login-footer';
+    footer.innerHTML =
+      '<span>© ' +
+      new Date().getFullYear() +
+      ' Astone Mwamba</span>' +
+      '<span class="am-dot">·</span>' +
+      '<a href="https://astonemwambaportfolio.netlify.app/" target="_blank" rel="noopener noreferrer">View portfolio</a>' +
+      '<span class="am-dot">·</span>' +
+      '<span>Content Manager</span>';
+    document.body.appendChild(footer);
   }
 
   function ensureBanner() {
     var existing = document.querySelector('.am-dashboard-banner');
-    if (!isDashboardRoute()) {
+    if (!isDashboardRoute() || isLoginScreen()) {
       if (existing) existing.remove();
       return;
     }
@@ -40,14 +67,16 @@
     }
   }
 
-  function boot() {
+  function refreshUi() {
+    ensureLoginFooter();
     ensureBanner();
-    // Decap is a SPA — keep banner in sync with hash routes
-    window.addEventListener('hashchange', ensureBanner);
+  }
+
+  function boot() {
+    refreshUi();
+    window.addEventListener('hashchange', refreshUi);
     var root = document.getElementById('nc-root') || document.body;
-    var observer = new MutationObserver(function () {
-      ensureBanner();
-    });
+    var observer = new MutationObserver(refreshUi);
     observer.observe(root, { childList: true, subtree: true });
   }
 
@@ -57,7 +86,6 @@
     boot();
   }
 
-  // Soften preview pane to match site type once CMS is ready
   if (window.CMS) {
     try {
       window.CMS.registerPreviewStyle(

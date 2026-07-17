@@ -40,6 +40,27 @@ body > div {
 [class*="AuthenticationPage"] {
   min-height: 100vh !important;
   background: transparent !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 2rem 1.25rem 5.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Center logo + login stack inside Decap's login card */
+[class*="AuthenticationPage"] > *,
+[class*="AuthenticationPage"] form,
+[class*="AuthenticationPage"] section {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 360px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
 }
 
 [class*="AuthenticationPage"] [class*="LoginButton"],
@@ -52,6 +73,9 @@ body > div {
   font-weight: 600 !important;
   letter-spacing: 0.02em;
   padding: 0.85rem 1.5rem !important;
+  margin-top: 1.25rem !important;
+  width: 100% !important;
+  max-width: 280px !important;
   box-shadow: 0 8px 24px rgba(0, 255, 255, 0.25) !important;
   transition: transform 0.2s ease, background 0.2s ease !important;
 }
@@ -62,10 +86,57 @@ body > div {
 }
 
 [class*="AuthenticationPage"] img {
+  display: block !important;
+  margin: 0 auto 1.25rem !important;
   border-radius: 16px !important;
   box-shadow: var(--am-shadow) !important;
   border: 2px solid var(--am-border);
+  width: 120px !important;
+  height: 120px !important;
   max-width: 120px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Login footer */
+.am-login-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(3, 26, 48, 0.92);
+  border-top: 1px solid var(--am-border);
+  backdrop-filter: blur(10px);
+  color: var(--am-muted);
+  font-family: var(--am-font);
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.am-login-footer a {
+  color: var(--am-cyan);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.am-login-footer a:hover {
+  text-decoration: underline;
+}
+
+.am-login-footer .am-dot {
+  opacity: 0.45;
+}
+
+body.am-logged-in .am-login-footer {
+  display: none;
 }
 
 /* ——— App chrome / header ——— */
