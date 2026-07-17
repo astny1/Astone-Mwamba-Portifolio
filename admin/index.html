@@ -10,24 +10,27 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="theme-color" content="#031a30">
-    <script>
-        (function () {
-            var path = window.location.pathname.replace(/\/+$/, '') || '/';
-            if (path !== '/admin' && path.indexOf('/admin/') === 0) {
-                window.location.replace('/admin/' + (window.location.hash || '#/'));
-            }
-        })();
-    </script>
+    <link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.init({
-                APIUrl: 'https://astonemwambaportfolio.netlify.app/.netlify/identity'
-            });
-        }
+        (function () {
+            var hash = window.location.hash || '';
+            if (/invite_token=/.test(hash)) {
+                var match = hash.match(/invite_token=([^&]+)/);
+                if (match) {
+                    window.location.replace('/invite.html#invite_token=' + match[1]);
+                }
+            }
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.init({
+                    APIUrl: 'https://astonemwambaportfolio.netlify.app/.netlify/identity'
+                });
+            }
+        })();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.6.4/dist/decap-cms.js"></script>
+    <script src="/admin/admin-ui.js"></script>
 </body>
 </html>

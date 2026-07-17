@@ -1,14 +1,9 @@
-# Decap CMS — edit at yoursite.com/admin/
-# Requires: Netlify + GitHub OAuth App env vars (see NETLIFY_CMS_SETUP.md)
+# Decap CMS — https://astonemwambaportfolio.netlify.app/admin/
+# Backend: Netlify Identity + Git Gateway (must be enabled in Netlify dashboard)
 
-# Netlify Identity + Git Gateway (same-origin — avoids Edge blocking api.github.com)
 backend:
   name: git-gateway
   branch: main
-  identity_url: https://astonemwambaportfolio.netlify.app/.netlify/identity
-  gateway_url: https://astonemwambaportfolio.netlify.app/.netlify/git
-
-# For local CMS testing only: run `npx decap-server` and set local_backend: true
 
 # Uploaded images save to images/uploads/ (keep each file under ~500 KB when possible)
 media_folder: "images/uploads"
@@ -22,7 +17,7 @@ collections:
   - name: blog
     label: Blog Posts
     label_singular: Blog Post
-    description: Articles shown on the Blog page
+    description: Write and publish articles for the Blog page. Add a cover photo and short excerpt for the list view.
     files:
       - name: blog_data
         label: All Blog Posts
@@ -89,7 +84,7 @@ collections:
   - name: achievements
     label: Achievements
     label_singular: Achievement
-    description: Milestones shown on the Achievements page
+    description: Showcase certifications, awards, and milestones on the Achievements page.
     files:
       - name: achievements_data
         label: All Achievements
