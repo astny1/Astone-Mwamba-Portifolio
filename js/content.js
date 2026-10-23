@@ -334,6 +334,46 @@ function youtubeId(url) {
     return '';
 }
 
+function itemSlug(item) {
+    return item.slug || slugify(item.title || item.org || '');
+}
+
+function storyParagraphs(text) {
+    return String(text || '')
+        .split(/\n+/)
+        .map(part => part.trim())
+        .filter(Boolean)
+        .map(part => `<p>${escapeHtml(part)}</p>`)
+        .join('');
+}
+
+function cardPreview(summary, details, limit) {
+    const max = limit || 150;
+    const shortText = String(summary || '').trim();
+    const longText = String(details || '').trim();
+    const source = shortText || longText;
+    const more = Boolean(longText) || source.length > max;
+    const shown = more ? truncateText(source, max) : source;
+    return {
+        more,
+        html: shown ? `<p>${escapeHtml(shown)}</p>` : ''
+    };
+}
+
+function readMoreLink(type, item) {
+    const slug = encodeURIComponent(itemSlug(item));
+    return `<a href="leadership-detail.html?type=${encodeURIComponent(type)}&slug=${slug}" class="read-more">Read more <i class="uil uil-arrow-right"></i></a>`;
+}
+
+function youtubeEmbed(url, title) {
+    const id = youtubeId(url);
+    if (!id) return '';
+    const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0`;
+    return `<div class="leadership-impact-player leadership-detail-player">
+        <iframe src="${src}" title="${escapeHtml(title || 'Impact video')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>`;
+}
+
 async function loadLeadershipEvents(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -352,13 +392,15 @@ async function loadLeadershipEvents(containerId) {
             const photo = item.image
                 ? `<div class="leadership-picture"><img src="${escapeHtml(imgSrc(item.image))}" alt="${escapeHtml(item.title || '')}" loading="lazy" decoding="async"></div>`
                 : `<div class="leadership-picture leadership-picture--empty" aria-hidden="true"></div>`;
+            const preview = cardPreview(item.description, item.details);
             return `
             <article class="leadership-picture-card">
                 ${photo}
                 <div class="leadership-picture-body">
                     ${item.label ? `<span class="leadership-event-type">${escapeHtml(item.label)}</span>` : ''}
                     <h3>${escapeHtml(item.title || '')}</h3>
-                    <p>${escapeHtml(item.description || '')}</p>
+                    ${preview.html}
+                    ${preview.more ? readMoreLink('event', item) : ''}
                 </div>
             </article>`;
         }).join('');
@@ -384,6 +426,7 @@ async function loadLeadershipImpact(containerId) {
         container.innerHTML = items.map(item => {
             const id = youtubeId(item.youtube_url);
             const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0`;
+            const preview = cardPreview(item.description, item.details);
             return `
             <article class="leadership-impact-card">
                 <div class="leadership-impact-player">
@@ -391,10 +434,132 @@ async function loadLeadershipImpact(containerId) {
                 </div>
                 <div class="leadership-impact-copy">
                     <h3>${escapeHtml(item.title || '')}</h3>
-                    <p>${escapeHtml(item.description || '')}</p>
+                    ${preview.html}
+                    ${preview.more ? readMoreLink('impact', item) : ''}
                 </div>
             </article>`;
         }).join('');
+    } catch (e) {
+        container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+    }
+}
+
+async function loadLeadershipPortfolio(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    try {
+        const res = await fetch('data/portfolio.json');
+        const data = await res.json();
+        const roles = data.roles || [];
+
+        if (!roles.length) {
+            container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+            return;
+        }
+
+        let lastSection = '';
+        container.innerHTML = roles.map(role => {
+            const points = (role.points || []).map(point => String(point).trim()).filter(Boolean);
+            const preview = cardPreview(points[0] || '', points.slice(1).join('\n'));
+            const heading = role.section && role.section !== lastSection
+                ? `<div class="sectionTitle${lastSection ? ' leadership-block-title' : ''}">
+                    <h5 class="titleText titleText-sm">${escapeHtml(role.section)} <div class="underline"><span></span></div></h5>
+                   </div>`
+                : '';
+            if (role.section) lastSection = role.section;
+            return `
+            ${heading}
+            <article class="leadership-role">
+                <div class="leadership-role-head">
+                    ${role.org ? `<p class="leadership-role-org">${escapeHtml(role.org)}</p>` : ''}
+                    <h3 class="leadership-role-title">${escapeHtml(role.title || '')}</h3>
+                    ${role.tag ? `<span class="leadership-role-tag">${escapeHtml(role.tag)}</span>` : ''}
+                </div>
+                ${preview.html}
+                ${(points.length > 1 || preview.more) ? readMoreLink('role', role) : ''}
+            </article>`;
+        }).join('');
+    } catch (e) {
+        container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+    }
+}
+
+async function loadLeadershipDetail(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+    const slug = params.get('slug');
+    const sources = {
+        event: { file: 'data/events.json', key: 'events', back: 'leadership-events.html', label: 'Events' },
+        impact: { file: 'data/impact.json', key: 'videos', back: 'leadership-impact.html', label: 'Impact' },
+        role: { file: 'data/portfolio.json', key: 'roles', back: 'leadership-portfolio.html', label: 'Portfolio' }
+    };
+    const source = sources[type];
+
+    if (!source || !slug) {
+        window.location.href = 'leadership.html';
+        return;
+    }
+
+    document.querySelectorAll('.leadership-subnav a').forEach(link => {
+        if (link.getAttribute('href') === source.back) link.classList.add('is-current');
+    });
+
+    try {
+        const res = await fetch(source.file);
+        const data = await res.json();
+        const item = (data[source.key] || []).find(entry => itemSlug(entry) === slug);
+
+        if (!item) {
+            container.innerHTML = `<p class="empty-msg">This story is not available. <a href="${source.back}">Back</a></p>`;
+            return;
+        }
+
+        const title = item.title || item.org || 'Leadership';
+        document.title = `${title} | Leadership Corner`;
+        const titleEl = document.getElementById('leadership-detail-title');
+        const leadEl = document.getElementById('leadership-detail-lead');
+        if (titleEl) titleEl.textContent = title;
+        if (leadEl) leadEl.textContent = source.label;
+
+        if (type === 'event') {
+            const photo = item.image
+                ? `<figure class="leadership-detail-photo"><img src="${escapeHtml(imgSrc(item.image))}" alt="${escapeHtml(title)}"></figure>`
+                : '';
+            container.innerHTML = `
+                <a href="${source.back}" class="back-link"><i class="uil uil-arrow-left"></i> Back to ${source.label}</a>
+                ${item.label ? `<span class="leadership-event-type">${escapeHtml(item.label)}</span>` : ''}
+                <h2 class="leadership-detail-heading">${escapeHtml(title)}</h2>
+                ${photo}
+                <div class="leadership-detail-copy">
+                    ${storyParagraphs(item.description)}
+                    ${storyParagraphs(item.details)}
+                </div>`;
+            return;
+        }
+
+        if (type === 'impact') {
+            container.innerHTML = `
+                <a href="${source.back}" class="back-link"><i class="uil uil-arrow-left"></i> Back to ${source.label}</a>
+                <h2 class="leadership-detail-heading">${escapeHtml(title)}</h2>
+                ${youtubeEmbed(item.youtube_url, title)}
+                <div class="leadership-detail-copy">
+                    ${storyParagraphs(item.description)}
+                    ${storyParagraphs(item.details)}
+                </div>`;
+            return;
+        }
+
+        const points = (item.points || []).map(point => `<li>${escapeHtml(point)}</li>`).join('');
+        container.innerHTML = `
+            <a href="${source.back}" class="back-link"><i class="uil uil-arrow-left"></i> Back to ${source.label}</a>
+            ${item.org ? `<p class="leadership-role-org">${escapeHtml(item.org)}</p>` : ''}
+            <h2 class="leadership-detail-heading">${escapeHtml(item.title || '')}</h2>
+            ${item.tag ? `<span class="leadership-role-tag">${escapeHtml(item.tag)}</span>` : ''}
+            <ul class="leadership-bullets leadership-detail-points">${points}</ul>`;
     } catch (e) {
         container.innerHTML = '<p class="empty-msg">Coming soon</p>';
     }

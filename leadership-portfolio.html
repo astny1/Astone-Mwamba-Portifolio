@@ -86,59 +86,7 @@
                 </nav>
                 <p class="leadership-summary">A dynamic leader, technology strategist, and youth advocate dedicated to sustainable development, digital transformation, and community empowerment across Zambia and Africa.</p>
 
-                <div class="sectionTitle">
-                    <h5 class="titleText titleText-sm">Founder &amp; Business Leadership <div class="underline"><span></span></div></h5>
-                </div>
-                <article class="leadership-role">
-                    <div class="leadership-role-head">
-                        <p class="leadership-role-org">Growthive Media</p>
-                        <h3 class="leadership-role-title">Chief Executive Officer &amp; Founder</h3>
-                    </div>
-                    <ul class="leadership-bullets">
-                        <li>Founded and leads a digital agency providing digital marketing, strategic brand identity, automation, and web development solutions for emerging enterprises.</li>
-                        <li>Drives technical architecture and lead-automation solutions to help regional businesses scale their digital presence.</li>
-                        <li>Leads cross-functional teams in delivering end-to-end media and IT consulting services.</li>
-                    </ul>
-                </article>
-
-                <div class="sectionTitle leadership-block-title">
-                    <h5 class="titleText titleText-sm">Volunteering &amp; Community Leadership <div class="underline"><span></span></div></h5>
-                </div>
-                <article class="leadership-role">
-                    <div class="leadership-role-head">
-                        <p class="leadership-role-org">Ubuntu Youth Network on Agenda 2063</p>
-                        <h3 class="leadership-role-title">Executive Director – Corporate Communications &amp; PR</h3>
-                        <span class="leadership-role-tag">Volunteer</span>
-                    </div>
-                    <ul class="leadership-bullets">
-                        <li>Directs national communications to align youth initiatives with the African Union’s Agenda 2063 goals.</li>
-                        <li>Negotiated and finalized a strategic Memorandum of Understanding (MoU) with Versatile Academy &amp; Wellness International (VAWI) for youth leadership masterclasses.</li>
-                        <li>Designed and deployed the digital registration portal and ticketing system for the 1st Muchinga Youth Summit.</li>
-                    </ul>
-                </article>
-                <article class="leadership-role">
-                    <div class="leadership-role-head">
-                        <p class="leadership-role-org">Securities and Exchange Commission (SEC) Zambia</p>
-                        <h3 class="leadership-role-title">Youth Ambassador</h3>
-                        <span class="leadership-role-tag">Volunteer</span>
-                    </div>
-                    <ul class="leadership-bullets">
-                        <li>Serves as a brand and financial literacy ambassador, raising awareness among young people regarding capital markets, investor protection, and financial regulation.</li>
-                        <li>Engages youth communities through peer outreach and educational campaigns on financial security and smart investment.</li>
-                    </ul>
-                </article>
-                <article class="leadership-role">
-                    <div class="leadership-role-head">
-                        <p class="leadership-role-org">AgriFuel Green Energy Initiative</p>
-                        <h3 class="leadership-role-title">Social Impact Award Finalist, Southern Africa</h3>
-                        <span class="leadership-role-tag">Project Lead &amp; Visionary · Mulakupikwa Village, Chinsali</span>
-                    </div>
-                    <ul class="leadership-bullets">
-                        <li>Named a Social Impact Award Finalist for Southern Africa for a community green-energy project in Mulakupikwa Village, Chinsali.</li>
-                        <li>Pioneered a circular-economy project converting local agricultural waste into eco-briquettes to combat deforestation and provide sustainable cooking fuel.</li>
-                        <li>Authored project architecture and pitch materials to mobilize stakeholder and community support.</li>
-                    </ul>
-                </article>
+                <div id="leadership-portfolio-list"></div>
 
                 <div class="sectionTitle leadership-block-title">
                     <h5 class="titleText titleText-sm">Impact at a glance <div class="underline"><span></span></div></h5>
@@ -181,6 +129,8 @@
     </div>
 
     <script src="js/site.js"></script>
+    <script src="js/content.js"></script>
     <script src="script.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => loadLeadershipPortfolio('leadership-portfolio-list'));</script>
 </body>
 </html>

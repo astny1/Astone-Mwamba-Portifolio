@@ -2699,6 +2699,55 @@ body.achievement-lightbox-open {
     line-height: 1.65;
 }
 
+.leadership-picture-body .read-more,
+.leadership-impact-copy .read-more,
+.leadership-role .read-more {
+    margin-top: 0.85rem;
+}
+
+.leadership-detail-heading {
+    color: var(--textColor);
+    font-size: 1.7rem;
+    margin: 0.4rem 0 1rem;
+}
+
+.leadership-detail-photo {
+    margin: 0 0 1.25rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.leadership-detail-photo img {
+    width: 100%;
+    max-height: 460px;
+    object-fit: cover;
+    display: block;
+}
+
+.leadership-detail-copy p,
+.leadership-detail-points {
+    color: var(--paragraphColor);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+}
+
+.leadership-detail-player {
+    margin-bottom: 1.25rem;
+    min-height: 280px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.leadership-detail .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--primaryColor);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
 .leadership-event,
 .leadership-book-card {
     background: var(--projectCardColor);

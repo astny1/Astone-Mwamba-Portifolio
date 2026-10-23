@@ -1,0 +1,50 @@
+{
+  "roles": [
+    {
+      "section": "Founder & Business Leadership",
+      "org": "Growthive Media",
+      "title": "Chief Executive Officer & Founder",
+      "slug": "growthive-media",
+      "points": [
+        "Founded and leads a digital agency providing digital marketing, strategic brand identity, automation, and web development solutions for emerging enterprises.",
+        "Drives technical architecture and lead-automation solutions to help regional businesses scale their digital presence.",
+        "Leads cross-functional teams in delivering end-to-end media and IT consulting services."
+      ]
+    },
+    {
+      "section": "Volunteering & Community Leadership",
+      "org": "Ubuntu Youth Network on Agenda 2063",
+      "title": "Executive Director – Corporate Communications & PR",
+      "tag": "Volunteer",
+      "slug": "ubuntu-youth-network",
+      "points": [
+        "Directs national communications to align youth initiatives with the African Union’s Agenda 2063 goals.",
+        "Negotiated and finalized a strategic Memorandum of Understanding (MoU) with Versatile Academy & Wellness International (VAWI) for youth leadership masterclasses.",
+        "Designed and deployed the digital registration portal and ticketing system for the 1st Muchinga Youth Summit."
+      ]
+    },
+    {
+      "section": "Volunteering & Community Leadership",
+      "org": "Securities and Exchange Commission (SEC) Zambia",
+      "title": "Youth Ambassador",
+      "tag": "Volunteer",
+      "slug": "sec-zambia",
+      "points": [
+        "Serves as a brand and financial literacy ambassador, raising awareness among young people regarding capital markets, investor protection, and financial regulation.",
+        "Engages youth communities through peer outreach and educational campaigns on financial security and smart investment."
+      ]
+    },
+    {
+      "section": "Volunteering & Community Leadership",
+      "org": "AgriFuel Green Energy Initiative",
+      "title": "Social Impact Award Finalist, Southern Africa",
+      "tag": "Project Lead & Visionary · Mulakupikwa Village, Chinsali",
+      "slug": "agrifuel",
+      "points": [
+        "Named a Social Impact Award Finalist for Southern Africa for a community green-energy project in Mulakupikwa Village, Chinsali.",
+        "Pioneered a circular-economy project converting local agricultural waste into eco-briquettes to combat deforestation and provide sustainable cooking fuel.",
+        "Authored project architecture and pitch materials to mobilize stakeholder and community support."
+      ]
+    }
+  ]
+}

@@ -157,9 +157,15 @@ collections:
                 name: image
                 widget: image
                 hint: "Card photo (JPG/PNG/WebP, under 500 KB)"
-              - label: Description
+              - label: Card summary
                 name: description
                 widget: text
+                hint: "One or two sentences on the card."
+              - label: Full story
+                name: details
+                widget: text
+                required: false
+                hint: "Optional longer write-up. If this or the summary is long, the card shows Read more and this page opens."
 
   - name: impact
     label: Leadership Impact
@@ -183,9 +189,15 @@ collections:
               - label: Title
                 name: title
                 widget: string
-              - label: Description
+              - label: Card summary
                 name: description
                 widget: text
+                hint: "Short text beside the video."
+              - label: Full story
+                name: details
+                widget: text
+                required: false
+                hint: "Optional longer write-up. Shown on the Read more page."
               - label: YouTube link
                 name: youtube_url
                 widget: string
