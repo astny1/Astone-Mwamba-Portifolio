@@ -1,28 +1,10 @@
 {
   "events": [
     {
-      "label": "Featured speaker",
-      "title": "5th Global Youth Work Conference",
-      "image": "/images/leadership/hero.jpeg",
-      "description": "Represented Zambian youth perspectives on an international platform as a selected featured speaker."
-    },
-    {
       "label": "Summit",
       "title": "1st Muchinga Youth Summit",
-      "image": "/images/leadership/hero.jpeg",
-      "description": "Designed and deployed the digital registration portal and ticketing system for Ubuntu Youth Network on Agenda 2063."
-    },
-    {
-      "label": "Program",
-      "title": "Huawei Seeds for the Future",
-      "image": "/images/leadership/hero.jpeg",
-      "description": "Tech4Good alumni. Cloud computing, AI, and digital innovation models for social impact."
-    },
-    {
-      "label": "Outreach",
-      "title": "SEC Zambia youth campaigns",
-      "image": "/images/leadership/hero.jpeg",
-      "description": "Youth Ambassador appearances on capital markets, investor protection, and financial literacy."
+      "image": "/images/uploads/photo_2026-10-23_23-19-39.jpg",
+      "description": "Organized and attended the landmark 1st Muchinga Youth Summit, bringing together young people from across the province to foster leadership, skills development, and civic engagement. Graced by the Provincial Youth Coordinator as the chief guest, the event served as a collaborative platform for youth empowerment and was successfully executed through generous corporate sponsorship from National Savings and Credit Bank (NATSAVE) and Indo-Zambian Bank."
     }
   ]
 }
