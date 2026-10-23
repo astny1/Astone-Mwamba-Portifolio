@@ -318,3 +318,85 @@ function initAchievementImageLightbox(container) {
         }
     });
 }
+
+function youtubeId(url) {
+    const value = String(url || '').trim();
+    if (!value) return '';
+    const match = value.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (match) return match[1];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(value)) return value;
+    try {
+        const id = new URL(value).searchParams.get('v');
+        if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) return id;
+    } catch (e) {
+        return '';
+    }
+    return '';
+}
+
+async function loadLeadershipEvents(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    try {
+        const res = await fetch('data/events.json');
+        const data = await res.json();
+        const items = data.events || [];
+
+        if (!items.length) {
+            container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+            return;
+        }
+
+        container.innerHTML = items.map(item => {
+            const photo = item.image
+                ? `<div class="leadership-picture"><img src="${escapeHtml(imgSrc(item.image))}" alt="${escapeHtml(item.title || '')}" loading="lazy" decoding="async"></div>`
+                : `<div class="leadership-picture leadership-picture--empty" aria-hidden="true"></div>`;
+            return `
+            <article class="leadership-picture-card">
+                ${photo}
+                <div class="leadership-picture-body">
+                    ${item.label ? `<span class="leadership-event-type">${escapeHtml(item.label)}</span>` : ''}
+                    <h3>${escapeHtml(item.title || '')}</h3>
+                    <p>${escapeHtml(item.description || '')}</p>
+                </div>
+            </article>`;
+        }).join('');
+    } catch (e) {
+        container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+    }
+}
+
+async function loadLeadershipImpact(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    try {
+        const res = await fetch('data/impact.json');
+        const data = await res.json();
+        const items = (data.videos || []).filter(item => youtubeId(item.youtube_url));
+
+        if (!items.length) {
+            container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+            return;
+        }
+
+        container.innerHTML = items.map(item => {
+            const id = youtubeId(item.youtube_url);
+            const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0`;
+            return `
+            <article class="leadership-impact-card">
+                <div class="leadership-impact-player">
+                    <iframe src="${src}" title="${escapeHtml(item.title || 'Impact video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <div class="leadership-impact-copy">
+                    <h3>${escapeHtml(item.title || '')}</h3>
+                    <p>${escapeHtml(item.description || '')}</p>
+                </div>
+            </article>`;
+        }).join('');
+    } catch (e) {
+        container.innerHTML = '<p class="empty-msg">Coming soon</p>';
+    }
+}
+

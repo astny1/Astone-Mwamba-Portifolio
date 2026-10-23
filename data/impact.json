@@ -1,0 +1,24 @@
+{
+  "videos": [
+    {
+      "title": "AgriFuel, Chinsali",
+      "description": "Social Impact Award Finalist, Southern Africa. Eco-briquettes from agricultural waste in Mulakupikwa Village.",
+      "youtube_url": ""
+    },
+    {
+      "title": "Global Youth Work Conference",
+      "description": "Speaking for Zambian youth on an international stage.",
+      "youtube_url": ""
+    },
+    {
+      "title": "Muchinga Youth Summit",
+      "description": "Youth gathering powered by a registration and ticketing system built for the network.",
+      "youtube_url": ""
+    },
+    {
+      "title": "Financial literacy with SEC Zambia",
+      "description": "Peer outreach on capital markets, investor protection, and smart investment.",
+      "youtube_url": ""
+    }
+  ]
+}

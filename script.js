@@ -20,7 +20,15 @@ document.addEventListener('DOMContentLoaded', function() {
         '.about .cta',
         '.about .lower',
         '.achievement-counters .counter-box',
-        '.contactContent'
+        '.contactContent',
+        '.leadership-summary',
+        '.leadership-door',
+        '.leadership-event',
+        '.leadership-video',
+        '.leadership-role',
+        '.leadership-metric',
+        '.leadership-global-item',
+        '.leadership-book-card'
     ];
 
     revealSelectors.forEach(function(selector) {
@@ -93,7 +101,25 @@ document.addEventListener('DOMContentLoaded', function() {
         counterObserver.observe(counterSection);
     }
 
-    // FormSubmit in background (no redirect)
+    document.querySelectorAll('.leadership-video-play').forEach(function(btn) {
+        const embed = (btn.getAttribute('data-embed') || '').trim();
+        if (!embed) return;
+        btn.disabled = false;
+        const status = btn.parentElement && btn.parentElement.querySelector('.leadership-video-status');
+        if (status) status.hidden = true;
+        btn.addEventListener('click', function() {
+            const frame = btn.closest('.leadership-video-frame');
+            if (!frame) return;
+            const iframe = document.createElement('iframe');
+            iframe.src = embed;
+            iframe.title = btn.getAttribute('aria-label') || 'Impact video';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            frame.replaceChildren(iframe);
+        });
+    });
+
+    // Netlify Forms (AJAX — stay on page)
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         const formStatus = document.getElementById('form-status');
@@ -113,10 +139,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             try {
-                const response = await fetch('https://formsubmit.co/ajax/astnymwamba@gmail.com', {
+                const response = await fetch('/', {
                     method: 'POST',
-                    body: new FormData(contactForm),
-                    headers: { Accept: 'application/json' }
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(new FormData(contactForm)).toString()
                 });
 
                 if (!response.ok) {
@@ -128,15 +154,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     formStatus.innerHTML = '<i class="uil uil-check-circle"></i> Thank You! Your request has been sent successfully.';
                     formStatus.classList.add('form-status--success');
                 }
-                if (submitBtn) {
-                    submitBtn.innerHTML = defaultBtnHtml;
-                    submitBtn.disabled = false;
-                }
             } catch (err) {
                 if (formStatus) {
-                    formStatus.textContent = 'Could not send. Please email astnymwamba@gmail.com directly.';
+                    formStatus.textContent = 'Could not send. Please email astone@astonemwamba.com directly.';
                     formStatus.classList.add('form-status--error');
                 }
+            } finally {
                 if (submitBtn) {
                     submitBtn.innerHTML = defaultBtnHtml;
                     submitBtn.disabled = false;

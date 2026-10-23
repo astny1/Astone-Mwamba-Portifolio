@@ -126,3 +126,68 @@ collections:
               - label: Description
                 name: description
                 widget: text
+
+  - name: events
+    label: Leadership Events
+    label_singular: Event
+    description: Picture cards on the Leadership Events page. Upload a photo for each appearance.
+    files:
+      - name: events_data
+        label: All Events
+        file: data/events.json
+        format: json
+        fields:
+          - label: Events
+            name: events
+            widget: list
+            summary: "{{fields.title}}"
+            allow_add: true
+            allow_delete: true
+            allow_reorder: true
+            collapsed: true
+            fields:
+              - label: Label
+                name: label
+                widget: string
+                hint: "Short type, e.g. Featured speaker, Summit, Outreach"
+              - label: Title
+                name: title
+                widget: string
+              - label: Photo
+                name: image
+                widget: image
+                hint: "Card photo (JPG/PNG/WebP, under 500 KB)"
+              - label: Description
+                name: description
+                widget: text
+
+  - name: impact
+    label: Leadership Impact
+    label_singular: Impact video
+    description: Impact page cards. Paste a YouTube link and the video plays inside the card.
+    files:
+      - name: impact_data
+        label: All Impact Videos
+        file: data/impact.json
+        format: json
+        fields:
+          - label: Videos
+            name: videos
+            widget: list
+            summary: "{{fields.title}}"
+            allow_add: true
+            allow_delete: true
+            allow_reorder: true
+            collapsed: true
+            fields:
+              - label: Title
+                name: title
+                widget: string
+              - label: Description
+                name: description
+                widget: text
+              - label: YouTube link
+                name: youtube_url
+                widget: string
+                required: false
+                hint: "Paste the full YouTube link, e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."

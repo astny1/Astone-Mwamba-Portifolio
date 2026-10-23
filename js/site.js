@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         closeIconID.addEventListener('click', () => navBar.classList.remove('show'));
     }
 
-    document.querySelectorAll('.navLink').forEach(link => {
+    document.querySelectorAll('.navLink, .navDropdownLink').forEach(link => {
         link.addEventListener('click', () => {
             if (navBar) navBar.classList.remove('show');
         });
@@ -42,10 +42,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Highlight current page in nav
     const page = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.navLink').forEach(link => {
-        const href = link.getAttribute('href') || '';
+    document.querySelectorAll('.navLink, .navDropdownLink').forEach(link => {
+        const href = (link.getAttribute('href') || '').split('#')[0].split('/').pop();
+        const onLeadership = page.indexOf('leadership') === 0;
         if (href === page || (page === '' && href === 'index.html')) {
+            link.style.color = 'var(--primaryColor)';
+        } else if (onLeadership && href === 'leadership.html' && link.classList.contains('navLink')) {
             link.style.color = 'var(--primaryColor)';
         }
     });
+
+    const leadershipHero = document.getElementById('leadership-hero');
+    const writeup = document.getElementById('leadership-writeup');
+    if (leadershipHero) {
+        requestAnimationFrame(function() {
+            leadershipHero.classList.add('is-loaded');
+        });
+    }
+    if (writeup) {
+        const text = writeup.getAttribute('data-writeup') || '';
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion || !text) {
+            writeup.textContent = text;
+            writeup.classList.add('is-typed');
+        } else {
+            writeup.textContent = '';
+            writeup.classList.add('is-typing');
+            let i = 0;
+            const typeNext = function() {
+                if (i < text.length) {
+                    writeup.textContent += text.charAt(i);
+                    i += 1;
+                    window.setTimeout(typeNext, 28);
+                } else {
+                    writeup.classList.remove('is-typing');
+                    writeup.classList.add('is-typed');
+                }
+            };
+            window.setTimeout(typeNext, 750);
+        }
+    }
 });

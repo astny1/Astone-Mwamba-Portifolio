@@ -27,10 +27,23 @@
                 <li class="navItem"><a href="#about" class="navLink"><span class="number">1.</span> About</a></li>
                 <li class="navItem"><a href="#education" class="navLink"><span class="number">2.</span> Education</a></li>
                 <li class="navItem"><a href="#skills" class="navLink"><span class="number">3.</span> Skills</a></li>
-                <li class="navItem"><a href="#projects" class="navLink"><span class="number">4.</span> Projects</a></li>
-                <li class="navItem"><a href="#software-projects" class="navLink"><span class="number">5.</span> Software</a></li>
-                <li class="navItem"><a href="blog.html" class="navLink"><span class="number">6.</span> Blog</a></li>
-                <li class="navItem"><a href="achievements.html" class="navLink"><span class="number">7.</span> Achievements</a></li>
+                <li class="navItem navItem--hasMenu">
+                    <a href="#projects" class="navLink"><span class="number">4.</span> Projects <i class="uil uil-angle-down navCaret" aria-hidden="true"></i></a>
+                    <ul class="navDropdown">
+                        <li><a href="#software-projects" class="navDropdownLink">Software</a></li>
+                    </ul>
+                </li>
+                <li class="navItem"><a href="blog.html" class="navLink"><span class="number">5.</span> Blog</a></li>
+                <li class="navItem"><a href="achievements.html" class="navLink"><span class="number">6.</span> Achievements</a></li>
+                <li class="navItem navItem--hasMenu">
+                    <a href="leadership.html" class="navLink"><span class="number">7.</span> Leadership <i class="uil uil-angle-down navCaret" aria-hidden="true"></i></a>
+                    <ul class="navDropdown">
+                        <li><a href="leadership-events.html" class="navDropdownLink">Events</a></li>
+                        <li><a href="leadership-impact.html" class="navDropdownLink">Impact</a></li>
+                        <li><a href="leadership-portfolio.html" class="navDropdownLink">Portfolio</a></li>
+                        <li><a href="leadership-book.html" class="navDropdownLink">Invite me</a></li>
+                    </ul>
+                </li>
                 <li class="navItem"><a href="#contact" class="navLink"><span class="number">8.</span> Contact</a></li>
                 <div class="closeIcon" id="closeIconID">
                     <i class="bx bxs-x-circle icon closeIc"></i>
@@ -56,7 +69,7 @@
     </div>
 
     <div class="col rightCol">
-        <div class="emailDiv">astnymwamba@gmail.com</div>
+        <div class="emailDiv">astone@astonemwamba.com</div>
         <div class="rightdivLine"></div>
     </div>
 
@@ -346,7 +359,7 @@
                             <h3 class="project-card-title">CAMINEX</h3>
                             <p class="project-role">Landing Page · Graphic Design · Industry Contributor</p>
                             <p>Contributed design support to a Copperbelt mining and agricultural networking organisation — social visuals, print-ready marketing materials, and a live event landing page.</p>
-                            <p class="project-deliverable">Developed a landing page: <a href="https://astny1.github.io/Caminexlandinpage/" target="_blank" rel="noopener noreferrer" class="project-short-link" title="CAMINEX landing page">astny1.github.io/Caminexlandinpage</a></p>
+                            <p class="project-deliverable">Developed a landing page: <a href="https://astny1.github.io/Caminexlandinpage/" target="_blank" rel="noopener noreferrer" class="project-short-link" title="CAMINEX landing page">click here</a></p>
                             <div class="software"><span>HTML/CSS</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span></div>
                         </div>
                         <a href="https://astny1.github.io/Caminexlandinpage/" target="_blank" rel="noopener noreferrer" class="wrapperLink" aria-label="Visit CAMINEX landing page"><i class="uil uil-external-link-alt"></i></a>
@@ -521,7 +534,7 @@
                             <i class="uil uil-envelope contactIcon"></i>
                             <div>
                                 <h2 class="contactTitle">Email</h2>
-                                <span class="contactDesc"><a href="mailto:astnymwamba@gmail.com">astnymwamba@gmail.com</a></span>
+                                <span class="contactDesc"><a href="mailto:astone@astonemwamba.com">astone@astonemwamba.com</a></span>
                             </div>
                         </div>
                         <div>
@@ -532,9 +545,11 @@
                             </div>
                         </div>
                     </div>
-                    <form id="contact-form" action="https://formsubmit.co/astnymwamba@gmail.com" method="POST">
-                        <input type="hidden" name="_subject" value="Portfolio contact form">
-                        <input type="hidden" name="_captcha" value="false">
+                    <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                        <input type="hidden" name="form-name" value="contact">
+                        <p class="netlify-honeypot" hidden>
+                            <label>Don’t fill this out: <input name="bot-field"></label>
+                        </p>
                         <div class="formTop">
                             <div class="field">
                                 <label for="name">Full Name</label>

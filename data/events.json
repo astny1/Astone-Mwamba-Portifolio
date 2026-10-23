@@ -1,0 +1,28 @@
+{
+  "events": [
+    {
+      "label": "Featured speaker",
+      "title": "5th Global Youth Work Conference",
+      "image": "/images/leadership/hero.jpeg",
+      "description": "Represented Zambian youth perspectives on an international platform as a selected featured speaker."
+    },
+    {
+      "label": "Summit",
+      "title": "1st Muchinga Youth Summit",
+      "image": "/images/leadership/hero.jpeg",
+      "description": "Designed and deployed the digital registration portal and ticketing system for Ubuntu Youth Network on Agenda 2063."
+    },
+    {
+      "label": "Program",
+      "title": "Huawei Seeds for the Future",
+      "image": "/images/leadership/hero.jpeg",
+      "description": "Tech4Good alumni. Cloud computing, AI, and digital innovation models for social impact."
+    },
+    {
+      "label": "Outreach",
+      "title": "SEC Zambia youth campaigns",
+      "image": "/images/leadership/hero.jpeg",
+      "description": "Youth Ambassador appearances on capital markets, investor protection, and financial literacy."
+    }
+  ]
+}
