@@ -307,6 +307,10 @@ function initAchievementImageLightbox(container) {
     if (!img) return;
 
     const openLightbox = () => {
+        if (window.openSitePhoto) {
+            window.openSitePhoto(img.currentSrc || img.src, img.alt);
+            return;
+        }
         getAchievementLightbox()._open(img.src, img.alt);
     };
 

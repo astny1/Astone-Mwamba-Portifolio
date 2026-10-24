@@ -82,4 +82,61 @@ document.addEventListener('DOMContentLoaded', function() {
             window.setTimeout(typeNext, 750);
         }
     }
+
+    const photoLightbox = document.createElement('div');
+    photoLightbox.className = 'achievement-lightbox';
+    photoLightbox.setAttribute('role', 'dialog');
+    photoLightbox.setAttribute('aria-modal', 'true');
+    photoLightbox.setAttribute('aria-label', 'Full size photo');
+    photoLightbox.innerHTML = `
+        <button type="button" class="achievement-lightbox-close" aria-label="Close full photo">&times;</button>
+        <div class="achievement-lightbox-backdrop"></div>
+        <figure class="achievement-lightbox-frame">
+            <img src="" alt="">
+        </figure>
+    `;
+    document.body.appendChild(photoLightbox);
+
+    const closePhoto = function() {
+        photoLightbox.classList.remove('is-open');
+        document.body.classList.remove('achievement-lightbox-open');
+        photoLightbox.querySelector('img').removeAttribute('src');
+    };
+
+    photoLightbox.querySelector('.achievement-lightbox-close').addEventListener('click', closePhoto);
+    photoLightbox.querySelector('.achievement-lightbox-backdrop').addEventListener('click', closePhoto);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && photoLightbox.classList.contains('is-open')) closePhoto();
+    });
+
+    window.openSitePhoto = function(src, alt) {
+        if (!src) return;
+        const img = photoLightbox.querySelector('img');
+        img.src = src;
+        img.alt = alt || '';
+        photoLightbox.classList.add('is-open');
+        document.body.classList.add('achievement-lightbox-open');
+        photoLightbox.querySelector('.achievement-lightbox-close').focus();
+    };
+
+    document.addEventListener('click', function(e) {
+        const photo = e.target.closest('.leadership-picture, .leadership-detail-photo, .achievement-story-cover, .content-card-thumb, .software-project-cover, .gallery-item, .post-featured-image, .achievement-image, .achievement-detail-hero, .project-card-media');
+        if (!photo || e.target.closest('a, button, .project-live-badge')) return;
+
+        let src = '';
+        let alt = 'Photo';
+        if (photo.classList.contains('project-card-media')) {
+            const match = (photo.style.backgroundImage || '').match(/url\((['"]?)(.*?)\1\)/);
+            src = match ? match[2] : '';
+        } else {
+            const img = photo.querySelector('img');
+            if (img) {
+                src = img.currentSrc || img.src;
+                alt = img.alt || alt;
+            }
+        }
+        if (!src) return;
+        e.preventDefault();
+        window.openSitePhoto(src, alt);
+    });
 });
