@@ -53,7 +53,7 @@
     banner.className = 'am-dashboard-banner';
     banner.innerHTML =
       '<h1>Content <span>Dashboard</span></h1>' +
-      '<p>Manage blog posts, comments, achievements, leadership events, and impact videos. Choose a collection below, edit, then publish — changes go to GitHub and Netlify rebuilds the site.</p>' +
+      '<p>Manage blog posts, achievements, leadership events, and impact videos. Blog comments appear in the list below — delete any you do not want.</p>' +
       '<div class="am-meta">' +
       '<span class="am-chip">Blog</span>' +
       '<span class="am-chip">Comments</span>' +
@@ -70,9 +70,104 @@
     }
   }
 
+  function escapeText(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function adminToken() {
+    var identity = window.netlifyIdentity;
+    var user = identity && identity.currentUser && identity.currentUser();
+    if (!user || !user.jwt) return Promise.resolve('');
+    return user.jwt().catch(function () { return ''; });
+  }
+
+  function renderCommentRows(panel, comments) {
+    var list = panel.querySelector('.am-comment-rows');
+    var note = panel.querySelector('.am-comment-note');
+    if (!comments.length) {
+      list.innerHTML = '<p class="am-comment-empty">No comments yet.</p>';
+      if (note) note.textContent = '';
+      return;
+    }
+    list.innerHTML = comments.map(function (comment) {
+      return '<article class="am-comment-row">' +
+        '<div><strong>' + escapeText(comment.name) + '</strong>' +
+        '<span>' + escapeText(comment.date) + ' · ' + escapeText(comment.slug) + '</span>' +
+        '<p>' + escapeText(comment.message) + '</p></div>' +
+        '<button type="button" data-id="' + escapeText(comment.id) + '">Delete</button>' +
+        '</article>';
+    }).join('');
+  }
+
+  function loadAdminComments(panel) {
+    var note = panel.querySelector('.am-comment-note');
+    fetch('/.netlify/functions/comment')
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        renderCommentRows(panel, data.comments || []);
+      })
+      .catch(function () {
+        if (note) note.textContent = 'Could not load comments.';
+      });
+  }
+
+  function ensureComments() {
+    var existing = document.querySelector('.am-comment-panel');
+    if (!isDashboardRoute() || isLoginScreen()) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
+
+    var banner = document.querySelector('.am-dashboard-banner');
+    var panel = document.createElement('section');
+    panel.className = 'am-comment-panel';
+    panel.innerHTML =
+      '<h2>Blog comments</h2>' +
+      '<p class="am-comment-note"></p>' +
+      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>';
+    panel.addEventListener('click', function (event) {
+      var button = event.target.closest('button[data-id]');
+      if (!button) return;
+      var note = panel.querySelector('.am-comment-note');
+      button.disabled = true;
+      adminToken().then(function (token) {
+        if (!token) throw new Error('Log in again to delete a comment.');
+        return fetch('/.netlify/functions/comment', {
+          method: 'DELETE',
+          headers: {
+            Authorization: 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: button.getAttribute('data-id') })
+        });
+      }).then(function (response) {
+        return response.json().then(function (data) {
+          if (!response.ok) throw new Error(data.error || 'Could not delete the comment.');
+          loadAdminComments(panel);
+        });
+      }).catch(function (error) {
+        button.disabled = false;
+        if (note) note.textContent = error.message || 'Could not delete the comment.';
+      });
+    });
+
+    if (banner && banner.parentNode) {
+      banner.insertAdjacentElement('afterend', panel);
+    } else {
+      document.body.appendChild(panel);
+    }
+    loadAdminComments(panel);
+  }
+
   function refreshUi() {
     ensureLoginFooter();
     ensureBanner();
+    ensureComments();
   }
 
   function boot() {

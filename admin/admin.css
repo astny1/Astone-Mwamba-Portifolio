@@ -468,9 +468,74 @@ button[class*="teal"],
   text-transform: uppercase;
 }
 
+.am-comment-panel {
+  max-width: 1120px;
+  margin: 1rem auto 0;
+  padding: 1.25rem 1.75rem 1.4rem;
+  border-radius: var(--am-radius);
+  border: 1px solid var(--am-border);
+  background: var(--am-panel);
+  color: var(--am-text);
+  font-family: var(--am-font);
+}
+
+.am-comment-panel h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--am-display);
+  font-size: 1.35rem;
+}
+
+.am-comment-note,
+.am-comment-empty {
+  margin: 0 0 0.75rem;
+  color: var(--am-muted);
+  font-size: 0.9rem;
+}
+
+.am-comment-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(150, 162, 188, 0.18);
+}
+
+.am-comment-row strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.am-comment-row span,
+.am-comment-row p {
+  color: var(--am-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.am-comment-row p {
+  margin: 0.25rem 0 0;
+}
+
+.am-comment-row button {
+  background: transparent;
+  color: var(--am-danger);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
 @media (max-width: 720px) {
-  .am-dashboard-banner {
+  .am-dashboard-banner,
+  .am-comment-panel {
     margin: 1rem 0.75rem 0;
     padding: 1.15rem 1.2rem;
+  }
+
+  .am-comment-row {
+    flex-direction: column;
   }
 }

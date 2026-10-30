@@ -137,41 +137,6 @@ collections:
                 required: false
                 hint: "Optional. Paste a URL so readers can open the original source."
 
-  - name: comments
-    label: Blog Comments
-    label_singular: Comment
-    description: Comments left on blog posts. Delete any comment here, then publish.
-    files:
-      - name: comments_data
-        label: All Comments
-        file: data/comments.json
-        format: json
-        fields:
-          - label: Comments
-            name: comments
-            widget: list
-            summary: "{{fields.name}} on {{fields.slug}} — {{fields.date}}"
-            allow_add: false
-            allow_delete: true
-            allow_reorder: false
-            collapsed: true
-            fields:
-              - label: ID
-                name: id
-                widget: string
-              - label: Post
-                name: slug
-                widget: string
-              - label: Name
-                name: name
-                widget: string
-              - label: Comment
-                name: message
-                widget: text
-              - label: Date
-                name: date
-                widget: string
-
   - name: events
     label: Leadership Events
     label_singular: Event

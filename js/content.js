@@ -125,8 +125,13 @@ async function bindPostComments(slug) {
     };
 
     try {
-        const res = await fetch('data/comments.json');
-        const data = await res.json();
+        let data = null;
+        const live = await fetch('/.netlify/functions/comment');
+        if (live.ok) data = await live.json();
+        if (!data) {
+            const file = await fetch('data/comments.json');
+            data = await file.json();
+        }
         paint(data.comments || []);
     } catch (e) {
         paint([]);
@@ -158,7 +163,7 @@ async function bindPostComments(slug) {
                 list.insertAdjacentHTML('beforeend', commentItem(result.comment));
             }
             form.reset();
-            if (status) status.textContent = 'Comment added. It stays once the site finishes updating.';
+            if (status) status.textContent = 'Comment added.';
         } catch (error) {
             if (status) status.textContent = error.message || 'Could not save the comment.';
         }
