@@ -37,6 +37,25 @@ function achievementExcerpt(item) {
 }
 
 /** Normalize image paths from CMS (handles /images/uploads/... or full URLs) */
+function safeHttpUrl(url) {
+    const value = String(url || '').trim();
+    if (!value) return '';
+    try {
+        const withProtocol = /^https?:\/\//i.test(value) ? value : 'https://' + value;
+        const parsed = new URL(withProtocol);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return '';
+        return parsed.href;
+    } catch (e) {
+        return '';
+    }
+}
+
+function sourceLink(url) {
+    const href = safeHttpUrl(url);
+    if (!href) return '';
+    return `<a class="source-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Source <i class="uil uil-external-link-alt"></i></a>`;
+}
+
 function imgSrc(path) {
     if (!path) return '';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
@@ -82,6 +101,70 @@ function renderPostBody(post) {
     return '';
 }
 
+function commentItem(comment) {
+    return `<li class="comment-item">
+        <div class="comment-meta">
+            <strong>${escapeHtml(comment.name || 'Reader')}</strong>
+            <time>${escapeHtml(formatDate(comment.date))}</time>
+        </div>
+        <p>${escapeHtml(comment.message || '')}</p>
+    </li>`;
+}
+
+async function bindPostComments(slug) {
+    const list = document.getElementById('comment-list');
+    const form = document.getElementById('comment-form');
+    const status = document.getElementById('comment-status');
+    if (!list || !form) return;
+
+    const paint = (comments) => {
+        const mine = comments.filter(item => item.slug === slug);
+        list.innerHTML = mine.length
+            ? mine.map(commentItem).join('')
+            : '<li class="comment-empty">No comments yet.</li>';
+    };
+
+    try {
+        const res = await fetch('data/comments.json');
+        const data = await res.json();
+        paint(data.comments || []);
+    } catch (e) {
+        paint([]);
+    }
+
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const data = new FormData(form);
+        if (String(data.get('website') || '').trim()) return;
+        const name = String(data.get('name') || '').trim();
+        const message = String(data.get('message') || '').trim();
+        if (status) status.textContent = 'Sending…';
+        try {
+            const response = await fetch('/.netlify/functions/comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug, name, message })
+            });
+            let result = {};
+            try {
+                result = await response.json();
+            } catch (e) {
+                throw new Error('Could not save the comment.');
+            }
+            if (!response.ok) throw new Error(result.error || 'Could not save the comment.');
+            if (result.comment) {
+                const empty = list.querySelector('.comment-empty');
+                if (empty) empty.remove();
+                list.insertAdjacentHTML('beforeend', commentItem(result.comment));
+            }
+            form.reset();
+            if (status) status.textContent = 'Comment added. It stays once the site finishes updating.';
+        } catch (error) {
+            if (status) status.textContent = error.message || 'Could not save the comment.';
+        }
+    });
+}
+
 async function loadBlogList(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -111,7 +194,10 @@ async function loadBlogList(containerId) {
                     <span class="content-date">${formatDate(post.date)}</span>
                     <h2 class="content-card-title"><a href="blog-post.html?slug=${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a></h2>
                     <p class="content-excerpt">${escapeHtml(post.excerpt)}</p>
-                    <a href="blog-post.html?slug=${encodeURIComponent(post.slug)}" class="read-more">Read article <i class="uil uil-arrow-right"></i></a>
+                    <div class="content-card-actions">
+                        <a href="blog-post.html?slug=${encodeURIComponent(post.slug)}" class="read-more">Read article <i class="uil uil-arrow-right"></i></a>
+                        ${sourceLink(post.source_url)}
+                    </div>
                 </div>
             </article>`;
         }).join('');
@@ -155,7 +241,20 @@ async function loadBlogPost(containerId) {
             ${featured}
             <div class="post-body">${renderPostBody(post)}</div>
             ${gallery}
+            ${sourceLink(post.source_url)}
+            <section class="post-comments" id="comments" aria-label="Comments">
+                <h2>Comments</h2>
+                <ul class="comment-list" id="comment-list"></ul>
+                <form class="comment-form" id="comment-form">
+                    <input type="text" name="name" maxlength="40" required placeholder="Name" autocomplete="name">
+                    <textarea name="message" maxlength="500" rows="3" required placeholder="Write a comment"></textarea>
+                    <input class="comment-honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
+                    <button type="submit">Comment</button>
+                    <p class="comment-status" id="comment-status" role="status"></p>
+                </form>
+            </section>
         `;
+        bindPostComments(slug);
     } catch (e) {
         container.innerHTML = '<p class="empty-msg">Could not load post.</p>';
     }
@@ -193,7 +292,10 @@ async function loadAchievements(containerId) {
                     </div>
                     <h2 class="achievement-story-title">${escapeHtml(item.title)}</h2>
                     <p class="achievement-story-excerpt">${escapeHtml(achievementExcerpt(item))}</p>
-                    <a href="achievement-post.html?slug=${encodeURIComponent(slug)}" class="read-more">Read more <i class="uil uil-arrow-right"></i></a>
+                    <div class="content-card-actions">
+                        <a href="achievement-post.html?slug=${encodeURIComponent(slug)}" class="read-more">Read more <i class="uil uil-arrow-right"></i></a>
+                        ${sourceLink(item.source_url)}
+                    </div>
                 </div>
             </article>`;
         }).join('');
@@ -243,6 +345,7 @@ async function loadAchievementDetail(containerId) {
             ${photo}
             <div class="achievement-detail-body">
                 <p>${escapeHtml(item.description)}</p>
+                ${sourceLink(item.source_url)}
             </div>
         `;
 

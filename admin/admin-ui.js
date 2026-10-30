@@ -53,9 +53,10 @@
     banner.className = 'am-dashboard-banner';
     banner.innerHTML =
       '<h1>Content <span>Dashboard</span></h1>' +
-      '<p>Manage blog posts, achievements, leadership events, and impact videos. Choose a collection below, edit, then publish — changes go to GitHub and Netlify rebuilds the site.</p>' +
+      '<p>Manage blog posts, comments, achievements, leadership events, and impact videos. Choose a collection below, edit, then publish — changes go to GitHub and Netlify rebuilds the site.</p>' +
       '<div class="am-meta">' +
       '<span class="am-chip">Blog</span>' +
+      '<span class="am-chip">Comments</span>' +
       '<span class="am-chip">Achievements</span>' +
       '<span class="am-chip">Events</span>' +
       '<span class="am-chip">Impact</span>' +
