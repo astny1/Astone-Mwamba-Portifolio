@@ -466,6 +466,23 @@ button[class*="teal"],
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-decoration: none;
+}
+
+.am-comments-card {
+  text-decoration: none !important;
+  color: var(--am-text) !important;
+}
+
+.am-comments-card strong,
+.am-comments-card span {
+  display: block;
+}
+
+.am-comments-card span {
+  color: var(--am-muted);
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
 }
 
 .am-comment-panel {
@@ -477,6 +494,34 @@ button[class*="teal"],
   background: var(--am-panel);
   color: var(--am-text);
   font-family: var(--am-font);
+}
+
+.am-comment-panel.is-page {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  max-width: none;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  overflow: auto;
+  padding: 5.5rem 1.25rem 2.5rem;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(0, 255, 255, 0.12), transparent 55%),
+    var(--am-bg);
+}
+
+.am-comment-panel .am-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.am-comment-panel .am-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--am-cyan);
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .am-comment-panel h2 {

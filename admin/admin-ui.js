@@ -8,6 +8,10 @@
     return hash === '#/' || hash === '#' || /^#\/?\s*$/.test(hash);
   }
 
+  function isCommentsRoute() {
+    return /^#\/comments\/?$/.test(window.location.hash || '');
+  }
+
   function isLoginScreen() {
     return !!document.querySelector('[class*="AuthenticationPage"]');
   }
@@ -53,10 +57,10 @@
     banner.className = 'am-dashboard-banner';
     banner.innerHTML =
       '<h1>Content <span>Dashboard</span></h1>' +
-      '<p>Manage blog posts, achievements, leadership events, and impact videos. Blog comments appear in the list below — delete any you do not want.</p>' +
+      '<p>Manage blog posts, achievements, leadership events, and impact videos. Open Comments to review and delete blog comments.</p>' +
       '<div class="am-meta">' +
       '<span class="am-chip">Blog</span>' +
-      '<span class="am-chip">Comments</span>' +
+      '<a class="am-chip am-comments-chip" href="#/comments">Comments</a>' +
       '<span class="am-chip">Achievements</span>' +
       '<span class="am-chip">Events</span>' +
       '<span class="am-chip">Impact</span>' +
@@ -108,28 +112,51 @@
     fetch('/.netlify/functions/comment')
       .then(function (response) { return response.json(); })
       .then(function (data) {
-        renderCommentRows(panel, data.comments || []);
+        var comments = data.comments || [];
+        renderCommentRows(panel, comments);
+        var chip = document.querySelector('.am-comments-chip');
+        if (chip) chip.textContent = comments.length ? 'Comments (' + comments.length + ')' : 'Comments';
       })
       .catch(function () {
         if (note) note.textContent = 'Could not load comments.';
       });
   }
 
-  function ensureComments() {
-    var existing = document.querySelector('.am-comment-panel');
+  function ensureCommentsCard() {
+    var existing = document.querySelector('.am-comments-card');
     if (!isDashboardRoute() || isLoginScreen()) {
       if (existing) existing.remove();
       return;
     }
     if (existing) return;
 
-    var banner = document.querySelector('.am-dashboard-banner');
+    var sample = document.querySelector('a[href*="#/collections/"]');
+    if (!sample || !sample.parentNode) return;
+
+    var card = document.createElement('a');
+    card.className = (sample.className ? sample.className + ' ' : '') + 'am-comments-card';
+    card.href = '#/comments';
+    card.innerHTML = '<strong>Blog comments</strong><span>Review and delete</span>';
+    sample.parentNode.appendChild(card);
+  }
+
+  function ensureComments() {
+    var existing = document.querySelector('.am-comment-panel');
+    if (!isCommentsRoute() || isLoginScreen()) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
+
     var panel = document.createElement('section');
-    panel.className = 'am-comment-panel';
+    panel.className = 'am-comment-panel is-page';
     panel.innerHTML =
+      '<div class="am-wrap">' +
+      '<a class="am-back" href="#/">Back to dashboard</a>' +
       '<h2>Blog comments</h2>' +
       '<p class="am-comment-note"></p>' +
-      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>';
+      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>' +
+      '</div>';
     panel.addEventListener('click', function (event) {
       var button = event.target.closest('button[data-id]');
       if (!button) return;
@@ -156,17 +183,14 @@
       });
     });
 
-    if (banner && banner.parentNode) {
-      banner.insertAdjacentElement('afterend', panel);
-    } else {
-      document.body.appendChild(panel);
-    }
+    document.body.appendChild(panel);
     loadAdminComments(panel);
   }
 
   function refreshUi() {
     ensureLoginFooter();
     ensureBanner();
+    ensureCommentsCard();
     ensureComments();
   }
 
