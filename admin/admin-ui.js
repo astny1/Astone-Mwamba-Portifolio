@@ -57,7 +57,7 @@
     banner.className = 'am-dashboard-banner';
     banner.innerHTML =
       '<h1>Content <span>Dashboard</span></h1>' +
-      '<p>Manage blog posts, achievements, leadership events, and impact videos. Open Comments to review and delete blog comments.</p>' +
+      '<p>Manage blog posts, achievements, leadership events, and impact videos. Blog comments stay in the panel on the right.</p>' +
       '<div class="am-meta">' +
       '<span class="am-chip">Blog</span>' +
       '<a class="am-chip am-comments-chip" href="#/comments">Comments</a>' +
@@ -122,41 +122,26 @@
       });
   }
 
-  function ensureCommentsCard() {
-    var existing = document.querySelector('.am-comments-card');
-    if (!isDashboardRoute() || isLoginScreen()) {
-      if (existing) existing.remove();
-      return;
-    }
-    if (existing) return;
-
-    var sample = document.querySelector('a[href*="#/collections/"]');
-    if (!sample || !sample.parentNode) return;
-
-    var card = document.createElement('a');
-    card.className = (sample.className ? sample.className + ' ' : '') + 'am-comments-card';
-    card.href = '#/comments';
-    card.innerHTML = '<strong>Blog comments</strong><span>Review and delete</span>';
-    sample.parentNode.appendChild(card);
+  function isLoggedIn() {
+    if (isLoginScreen()) return false;
+    var root = document.getElementById('nc-root');
+    return !!(root && root.textContent && root.textContent.trim().length > 20);
   }
 
   function ensureComments() {
     var existing = document.querySelector('.am-comment-panel');
-    if (!isCommentsRoute() || isLoginScreen()) {
+    if (!isLoggedIn()) {
       if (existing) existing.remove();
       return;
     }
     if (existing) return;
 
-    var panel = document.createElement('section');
-    panel.className = 'am-comment-panel is-page';
+    var panel = document.createElement('aside');
+    panel.className = 'am-comment-panel is-dock';
     panel.innerHTML =
-      '<div class="am-wrap">' +
-      '<a class="am-back" href="#/">Back to dashboard</a>' +
       '<h2>Blog comments</h2>' +
       '<p class="am-comment-note"></p>' +
-      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>' +
-      '</div>';
+      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>';
     panel.addEventListener('click', function (event) {
       var button = event.target.closest('button[data-id]');
       if (!button) return;
@@ -190,7 +175,6 @@
   function refreshUi() {
     ensureLoginFooter();
     ensureBanner();
-    ensureCommentsCard();
     ensureComments();
   }
 

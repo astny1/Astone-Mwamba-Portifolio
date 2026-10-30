@@ -496,19 +496,16 @@ button[class*="teal"],
   font-family: var(--am-font);
 }
 
-.am-comment-panel.is-page {
+.am-comment-panel.is-dock {
   position: fixed;
-  z-index: 40;
-  inset: 0;
-  max-width: none;
+  z-index: 100000;
+  top: 76px;
+  right: 16px;
+  width: min(360px, calc(100vw - 32px));
+  max-height: calc(100vh - 96px);
   margin: 0;
-  border: none;
-  border-radius: 0;
   overflow: auto;
-  padding: 5.5rem 1.25rem 2.5rem;
-  background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(0, 255, 255, 0.12), transparent 55%),
-    var(--am-bg);
+  box-shadow: var(--am-shadow);
 }
 
 .am-comment-panel .am-wrap {
