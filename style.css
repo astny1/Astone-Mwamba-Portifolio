@@ -2698,6 +2698,17 @@ body.achievement-lightbox-open {
     border: 0;
 }
 
+.leadership-impact-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leadership-impact-fallback a {
+    color: var(--primaryColor);
+    font-weight: 600;
+}
+
 .leadership-impact-copy {
     padding: 1.3rem 1.35rem 1.45rem;
     display: flex;

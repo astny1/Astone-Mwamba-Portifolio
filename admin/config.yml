@@ -198,8 +198,8 @@ collections:
                 widget: text
                 required: false
                 hint: "Optional longer write-up. Shown on the Read more page."
-              - label: YouTube link
+              - label: Video link
                 name: youtube_url
                 widget: string
                 required: false
-                hint: "Paste the full YouTube link, e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                hint: "Paste a YouTube or Facebook video link. The video plays in the card."

@@ -369,13 +369,22 @@ function readMoreLink(type, item) {
     return `<a href="leadership-detail.html?type=${encodeURIComponent(type)}&slug=${slug}" class="read-more">Read more <i class="uil uil-arrow-right"></i></a>`;
 }
 
-function youtubeEmbed(url, title) {
-    const id = youtubeId(url);
-    if (!id) return '';
-    const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0`;
-    return `<div class="leadership-impact-player leadership-detail-player">
-        <iframe src="${src}" title="${escapeHtml(title || 'Impact video')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>`;
+function videoEmbed(url, title) {
+    const value = String(url || '').trim();
+    if (!value) return '';
+    const safeTitle = escapeHtml(title || 'Impact video');
+    const allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    const yt = youtubeId(value);
+    if (yt) {
+        const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt)}?rel=0`;
+        return `<div class="leadership-impact-player leadership-detail-player"><iframe src="${src}" title="${safeTitle}" allow="${allow}" allowfullscreen></iframe></div>`;
+    }
+    if (/facebook\.com|fb\.watch/i.test(value)) {
+        const normalized = value.replace(/https?:\/\/(?:web|m|mbasic)\.facebook\.com/i, 'https://www.facebook.com');
+        const src = 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(normalized) + '&show_text=false&width=560';
+        return `<div class="leadership-impact-player leadership-detail-player"><iframe src="${src}" title="${safeTitle}" allow="${allow}" allowfullscreen></iframe></div>`;
+    }
+    return `<div class="leadership-impact-player leadership-detail-player leadership-impact-fallback"><a href="${escapeHtml(value)}" target="_blank" rel="noopener noreferrer">Watch video</a></div>`;
 }
 
 async function loadLeadershipEvents(containerId) {
@@ -420,7 +429,7 @@ async function loadLeadershipImpact(containerId) {
     try {
         const res = await fetch('data/impact.json');
         const data = await res.json();
-        const items = (data.videos || []).filter(item => youtubeId(item.youtube_url));
+        const items = (data.videos || []).filter(item => String(item.youtube_url || '').trim());
 
         if (!items.length) {
             container.innerHTML = '<p class="empty-msg">Coming soon</p>';
@@ -428,14 +437,10 @@ async function loadLeadershipImpact(containerId) {
         }
 
         container.innerHTML = items.map(item => {
-            const id = youtubeId(item.youtube_url);
-            const src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?rel=0`;
             const preview = cardPreview(item.description, item.details);
             return `
             <article class="leadership-impact-card">
-                <div class="leadership-impact-player">
-                    <iframe src="${src}" title="${escapeHtml(item.title || 'Impact video')}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                </div>
+                ${videoEmbed(item.youtube_url, item.title)}
                 <div class="leadership-impact-copy">
                     <h3>${escapeHtml(item.title || '')}</h3>
                     ${preview.html}
@@ -549,7 +554,7 @@ async function loadLeadershipDetail(containerId) {
             container.innerHTML = `
                 <a href="${source.back}" class="back-link"><i class="uil uil-arrow-left"></i> Back to ${source.label}</a>
                 <h2 class="leadership-detail-heading">${escapeHtml(title)}</h2>
-                ${youtubeEmbed(item.youtube_url, title)}
+                ${videoEmbed(item.youtube_url, title)}
                 <div class="leadership-detail-copy">
                     ${storyParagraphs(item.description)}
                     ${storyParagraphs(item.details)}
