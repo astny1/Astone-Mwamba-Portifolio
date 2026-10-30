@@ -20,18 +20,51 @@ function clean(value, max) {
     .slice(0, max);
 }
 
-function blobContext() {
-  const encoded = process.env.NETLIFY_BLOBS_CONTEXT;
-  if (!encoded) return null;
-  try {
-    return JSON.parse(Buffer.from(encoded, 'base64').toString('utf8'));
-  } catch (e) {
-    return null;
-  }
+function headerValue(event, name) {
+  const headers = (event && event.headers) || {};
+  const wanted = name.toLowerCase();
+  const key = Object.keys(headers).find(item => item.toLowerCase() === wanted);
+  const value = key ? headers[key] : '';
+  return Array.isArray(value) ? value[0] : value;
 }
 
-async function blobRequest(method, body, etag) {
-  const ctx = blobContext();
+function decodeJson(value) {
+  if (!value) return null;
+  if (typeof value === 'object') return value;
+  const normalized = String(value).replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized.length % 4 === 0
+    ? normalized
+    : normalized + '='.repeat(4 - (normalized.length % 4));
+  return JSON.parse(Buffer.from(padded, 'base64').toString('utf8'));
+}
+
+function blobContext(event) {
+  if (process.env.NETLIFY_BLOBS_CONTEXT) {
+    try {
+      const fromEnv = decodeJson(process.env.NETLIFY_BLOBS_CONTEXT);
+      if (fromEnv && fromEnv.siteID && fromEnv.token) return fromEnv;
+    } catch (e) {
+      /* try the Lambda event next */
+    }
+  }
+
+  let data = null;
+  try {
+    data = decodeJson(event && event.blobs);
+  } catch (e) {
+    data = null;
+  }
+  const siteID = headerValue(event, 'x-nf-site-id');
+  if (!data || !data.token || !data.url || !siteID) return null;
+  return {
+    siteID,
+    token: data.token,
+    edgeURL: data.url,
+    uncachedEdgeURL: data.url
+  };
+}
+
+async function blobRequest(ctx, method, body, etag) {
   if (!ctx || !ctx.siteID || !ctx.token) {
     const error = new Error('Comments storage is unavailable.');
     error.status = 503;
@@ -65,8 +98,8 @@ async function blobRequest(method, body, etag) {
   return fetch(target.url, { method, headers: finalHeaders, body });
 }
 
-async function readComments() {
-  const response = await blobRequest('GET');
+async function readComments(ctx) {
+  const response = await blobRequest(ctx, 'GET');
   if (response.status === 404) return { comments: [], etag: '' };
   if (!response.ok) {
     const error = new Error('Could not read comments.');
@@ -81,8 +114,8 @@ async function readComments() {
   };
 }
 
-async function writeComments(comments, etag) {
-  const response = await blobRequest('PUT', JSON.stringify({ comments }), etag);
+async function writeComments(ctx, comments, etag) {
+  const response = await blobRequest(ctx, 'PUT', JSON.stringify({ comments }), etag);
   if (!response.ok && response.status !== 412) {
     const error = new Error('Could not save the comment.');
     error.status = response.status;
@@ -111,9 +144,20 @@ async function isAdmin(event) {
 }
 
 exports.handler = async (event) => {
+  const ctx = blobContext(event);
   try {
+    if (!ctx) {
+      const error = new Error('Comments storage is unavailable.');
+      error.status = 503;
+      error.detail = {
+        hasBlobs: Boolean(event && event.blobs),
+        hasSite: Boolean(headerValue(event, 'x-nf-site-id'))
+      };
+      throw error;
+    }
+
     if (event.httpMethod === 'GET') {
-      const { comments } = await readComments();
+      const { comments } = await readComments(ctx);
       return json(200, { comments });
     }
 
@@ -126,9 +170,9 @@ exports.handler = async (event) => {
       if (!id) return json(400, { error: 'Missing comment.' });
 
       for (let attempt = 0; attempt < 3; attempt += 1) {
-        const current = await readComments();
+        const current = await readComments(ctx);
         const next = current.comments.filter(item => item.id !== id);
-        const status = await writeComments(next, current.etag);
+        const status = await writeComments(ctx, next, current.etag);
         if (status !== 412) return json(200, { ok: true });
       }
       return json(409, { error: 'Could not delete the comment. Try again.' });
@@ -160,11 +204,11 @@ exports.handler = async (event) => {
     };
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const current = await readComments();
+      const current = await readComments(ctx);
       if (current.comments.filter(item => item.slug === slug).length >= 80) {
         return json(429, { error: 'This post has enough comments for now.' });
       }
-      const status = await writeComments(current.comments.concat(comment), current.etag);
+      const status = await writeComments(ctx, current.comments.concat(comment), current.etag);
       if (status !== 412) return json(200, { ok: true, comment });
     }
     return json(409, { error: 'Could not save the comment. Try again.' });
@@ -172,7 +216,8 @@ exports.handler = async (event) => {
     return json(error.status === 503 ? 503 : 500, {
       error: error.status === 503
         ? 'Comments are not ready yet.'
-        : 'Could not save the comment.'
+        : 'Could not save the comment.',
+      detail: error.detail || undefined
     });
   }
 };
