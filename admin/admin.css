@@ -486,39 +486,21 @@ button[class*="teal"],
 }
 
 .am-comment-panel {
-  max-width: 1120px;
-  margin: 1rem auto 0;
-  padding: 1.25rem 1.75rem 1.4rem;
-  border-radius: var(--am-radius);
-  border: 1px solid var(--am-border);
-  background: var(--am-panel);
+  position: static;
+  z-index: auto;
+  width: auto;
+  max-width: none;
+  max-height: 280px;
+  overflow: auto;
+  margin: 1rem 0 0;
+  padding: 0.85rem 0 0;
+  border: none;
+  border-top: 1px solid var(--am-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: var(--am-text);
   font-family: var(--am-font);
-}
-
-.am-comment-panel.is-dock {
-  position: fixed;
-  z-index: 100000;
-  top: 76px;
-  right: 16px;
-  width: min(360px, calc(100vw - 32px));
-  max-height: calc(100vh - 96px);
-  margin: 0;
-  overflow: auto;
-  box-shadow: var(--am-shadow);
-}
-
-.am-comment-panel .am-wrap {
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.am-comment-panel .am-back {
-  display: inline-block;
-  margin-bottom: 1rem;
-  color: var(--am-cyan);
-  font-weight: 600;
-  text-decoration: none;
 }
 
 .am-comment-panel h2 {
@@ -571,10 +553,14 @@ button[class*="teal"],
 }
 
 @media (max-width: 720px) {
-  .am-dashboard-banner,
-  .am-comment-panel {
+  .am-dashboard-banner {
     margin: 1rem 0.75rem 0;
     padding: 1.15rem 1.2rem;
+  }
+
+  .am-comment-panel {
+    margin: 1rem 0 0;
+    padding: 0.85rem 0 0;
   }
 
   .am-comment-row {

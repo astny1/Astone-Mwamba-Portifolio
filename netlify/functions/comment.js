@@ -132,15 +132,28 @@ async function postExists(slug) {
   return (blog.posts || []).some(post => post.slug === slug);
 }
 
+function identityUrl() {
+  return 'https://astonemwambaportfolio.netlify.app/.netlify/identity/user';
+}
+
 async function isAdmin(event) {
-  const header = event.headers.authorization || event.headers.Authorization || '';
+  const header = headerValue(event, 'authorization') || '';
   const token = header.replace(/^Bearer\s+/i, '').trim();
   if (!token) return false;
-  const site = process.env.URL || 'https://astonemwambaportfolio.netlify.app';
-  const response = await fetch(site + '/.netlify/identity/user', {
+  const response = await fetch(identityUrl(), {
     headers: { Authorization: 'Bearer ' + token }
   });
   return response.ok;
+}
+
+async function deleteComment(ctx, id) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const current = await readComments(ctx);
+    const next = current.comments.filter(item => item.id !== id);
+    const status = await writeComments(ctx, next, current.etag);
+    if (status !== 412) return json(200, { ok: true });
+  }
+  return json(409, { error: 'Could not delete the comment. Try again.' });
 }
 
 exports.handler = async (event) => {
@@ -168,14 +181,7 @@ exports.handler = async (event) => {
       const payload = JSON.parse(event.body || '{}');
       const id = clean(payload.id, 40);
       if (!id) return json(400, { error: 'Missing comment.' });
-
-      for (let attempt = 0; attempt < 3; attempt += 1) {
-        const current = await readComments(ctx);
-        const next = current.comments.filter(item => item.id !== id);
-        const status = await writeComments(ctx, next, current.etag);
-        if (status !== 412) return json(200, { ok: true });
-      }
-      return json(409, { error: 'Could not delete the comment. Try again.' });
+      return deleteComment(ctx, id);
     }
 
     if (event.httpMethod !== 'POST') {
@@ -184,6 +190,14 @@ exports.handler = async (event) => {
 
     const payload = JSON.parse(event.body || '{}');
     if (payload.website) return json(200, { ok: true });
+    if (payload.action === 'delete') {
+      if (!(await isAdmin(event))) {
+        return json(401, { error: 'Log in to the admin panel to delete a comment.' });
+      }
+      const id = clean(payload.id, 40);
+      if (!id) return json(400, { error: 'Missing comment.' });
+      return deleteComment(ctx, id);
+    }
 
     const slug = clean(payload.slug, 80);
     const name = clean(payload.name, 40);

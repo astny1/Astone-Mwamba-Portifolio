@@ -8,10 +8,6 @@
     return hash === '#/' || hash === '#' || /^#\/?\s*$/.test(hash);
   }
 
-  function isCommentsRoute() {
-    return /^#\/comments\/?$/.test(window.location.hash || '');
-  }
-
   function isLoginScreen() {
     return !!document.querySelector('[class*="AuthenticationPage"]');
   }
@@ -57,21 +53,28 @@
     banner.className = 'am-dashboard-banner';
     banner.innerHTML =
       '<h1>Content <span>Dashboard</span></h1>' +
-      '<p>Manage blog posts, achievements, leadership events, and impact videos. Blog comments stay in the panel on the right.</p>' +
+      '<p>Manage blog posts, achievements, leadership events, and impact videos. Delete blog comments below.</p>' +
       '<div class="am-meta">' +
       '<span class="am-chip">Blog</span>' +
-      '<a class="am-chip am-comments-chip" href="#/comments">Comments</a>' +
+      '<span class="am-chip am-comments-chip">Comments</span>' +
       '<span class="am-chip">Achievements</span>' +
       '<span class="am-chip">Events</span>' +
       '<span class="am-chip">Impact</span>' +
       '<span class="am-chip">Media uploads</span>' +
-      '</div>';
+      '</div>' +
+      '<section class="am-comment-panel">' +
+      '<h2>Blog comments</h2>' +
+      '<p class="am-comment-note"></p>' +
+      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>' +
+      '</section>';
 
     if (host.firstChild) {
       host.insertBefore(banner, host.firstChild);
     } else {
       host.appendChild(banner);
     }
+    bindCommentDeletes(banner);
+    loadAdminComments(banner);
   }
 
   function escapeText(value) {
@@ -82,11 +85,35 @@
       .replace(/"/g, '&quot;');
   }
 
+  function tokenFromObject(value) {
+    if (!value) return '';
+    if (typeof value === 'string') {
+      try { value = JSON.parse(value); } catch (e) { return ''; }
+    }
+    return (value.token && value.token.access_token) || value.access_token || '';
+  }
+
+  function storedIdentityToken() {
+    for (var i = 0; i < window.localStorage.length; i += 1) {
+      var key = window.localStorage.key(i) || '';
+      if (!/gotrue|cms-user|netlify.*user/i.test(key)) continue;
+      try {
+        var token = tokenFromObject(window.localStorage.getItem(key));
+        if (token) return token;
+      } catch (e) {
+        /* try the next key */
+      }
+    }
+    return '';
+  }
+
   function adminToken() {
     var identity = window.netlifyIdentity;
     var user = identity && identity.currentUser && identity.currentUser();
-    if (!user || !user.jwt) return Promise.resolve('');
-    return user.jwt().catch(function () { return ''; });
+    if (user && typeof user.jwt === 'function') {
+      return user.jwt().catch(function () { return storedIdentityToken(); });
+    }
+    return Promise.resolve(storedIdentityToken());
   }
 
   function renderCommentRows(panel, comments) {
@@ -122,40 +149,24 @@
       });
   }
 
-  function isLoggedIn() {
-    if (isLoginScreen()) return false;
-    var root = document.getElementById('nc-root');
-    return !!(root && root.textContent && root.textContent.trim().length > 20);
-  }
-
-  function ensureComments() {
-    var existing = document.querySelector('.am-comment-panel');
-    if (!isLoggedIn()) {
-      if (existing) existing.remove();
-      return;
-    }
-    if (existing) return;
-
-    var panel = document.createElement('aside');
-    panel.className = 'am-comment-panel is-dock';
-    panel.innerHTML =
-      '<h2>Blog comments</h2>' +
-      '<p class="am-comment-note"></p>' +
-      '<div class="am-comment-rows"><p class="am-comment-empty">Loading comments…</p></div>';
+  function bindCommentDeletes(panel) {
+    if (panel._amBound) return;
+    panel._amBound = true;
     panel.addEventListener('click', function (event) {
       var button = event.target.closest('button[data-id]');
       if (!button) return;
+      event.preventDefault();
       var note = panel.querySelector('.am-comment-note');
       button.disabled = true;
       adminToken().then(function (token) {
         if (!token) throw new Error('Log in again to delete a comment.');
         return fetch('/.netlify/functions/comment', {
-          method: 'DELETE',
+          method: 'POST',
           headers: {
             Authorization: 'Bearer ' + token,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ id: button.getAttribute('data-id') })
+          body: JSON.stringify({ action: 'delete', id: button.getAttribute('data-id') })
         });
       }).then(function (response) {
         return response.json().then(function (data) {
@@ -167,15 +178,11 @@
         if (note) note.textContent = error.message || 'Could not delete the comment.';
       });
     });
-
-    document.body.appendChild(panel);
-    loadAdminComments(panel);
   }
 
   function refreshUi() {
     ensureLoginFooter();
     ensureBanner();
-    ensureComments();
   }
 
   function boot() {
